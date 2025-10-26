@@ -1,8 +1,22 @@
 
 import { Router } from 'express';
-import { validatePlayer } from '../schemas/player.js';
+import { validatePlayer, validateIdPlayer } from '../schemas/player.js';
 
 var player = Router();
+
+player.get('/', (req, res) => {
+    let { page, limit } = req.query;
+
+    if (!page) {
+        page = 1;
+    }
+
+    if (!limit) {
+        limit = 10;
+    }
+
+    res.status(200).json({"message": "Backoffice API is running - players endpoint - players with no condition, page: " + page + ", limit: " + limit});
+});
 
 /** 
  * @route GET /players/:id
@@ -11,9 +25,10 @@ var player = Router();
  */
 player.get('/:id', (req, res) => {
     const { id } = req.params;
-
-    if (!id) {
-        return res.status(400).json({"message": "Player id is required"});
+    const result = validateIdPlayer(parseInt(id));
+    
+    if (result.error) {      
+        return res.status(400).json({"message": "League id is required or invalid", "errors": JSON.parse(result.error)});
     }
 
     res.status(200).json({"message": "Backoffice API is running - players endpoint id: " + id});
@@ -26,15 +41,16 @@ player.get('/:id', (req, res) => {
  */
 player.put('/:id', (req, res)=> {
     const { id } = req.params;
-
-    if (!id) {
-        return res.status(400).json({"message": "Player id is required"});
+    const result = validateIdPlayer(parseInt(id));
+    
+    if (result.error) {      
+        return res.status(400).json({"message": "League id is required or invalid", "errors": JSON.parse(result.error)});
     }
 
-    const result = validatePlayer(req.body);
+    const resultPlayer = validatePlayer(req.body);
         
-    if (result.error) {
-        return res.status(400).json({"message": "Invalid player data", "errors": result.errors});
+    if (resultPlayer.error) {
+        return res.status(400).json({"message": "Invalid player data", "errors": JSON.parse(resultPlayer.error)});
     }
 
     res.status(200).json({"message": "Backoffice API is running - players endpoint update id: " + id});
@@ -49,7 +65,7 @@ player.post('/', (req, res) => {
     const result = validatePlayer(req.body);
         
     if (result.error) {
-        return res.status(400).json({"message": "Invalid player data", "errors": result.errors});
+        return res.status(400).json({"message": "Invalid player data", "errors": JSON.parse(result.error)});
     }
 
     res.status(200).json({"message": "Backoffice API is running - players endpoint create"});
@@ -62,9 +78,10 @@ player.post('/', (req, res) => {
  */
 player.delete('/:id', (req, res) => {
     const { id } = req.params;
-
-    if (!id) {          
-        return res.status(400).json({"message": "Player id is required"});
+    const result = validateIdPlayer(parseInt(id));
+    
+    if (result.error) {      
+        return res.status(400).json({"message": "League id is required or invalid", "errors": JSON.parse(result.error)});
     }
 
     res.status(200).json({"message": "Backoffice API is running - players endpoint delete id: " + id});

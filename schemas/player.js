@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const CardSchema = z.object({
+const PlayerSchema = z.object({
     name         : z.string("Name must be a string").min(3, "Name must be at least 3 characters long"),
     position     : z.int("Selection must be a valid position").positive("Position must be a positive integer").min(1, "Position must be at least 1"),
     idTournament : z.int().positive("Select a valid tournament"),
@@ -8,5 +8,11 @@ const CardSchema = z.object({
 });
 
 export const validatePlayer = (object) => {
-    return CardSchema.safeParse(object);
+    return PlayerSchema.safeParse(object);
+}
+
+const PlayerIdSchema = z.number().int().positive("ID must be a positive integer");
+
+export const validateIdPlayer = (input) => {
+    return PlayerIdSchema.safeParse(input);
 }
