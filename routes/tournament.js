@@ -4,6 +4,25 @@ import { validateTournament, validateIdTournament } from '../schemas/tournament.
 
 var tournament = Router();
 
+/** 
+ * @route GET /tournaments/
+ * @desc Test tournaments route
+ * @access Public
+ */
+tournament.get('/', (req, res) => {
+    let { page, limit } = req.query;
+
+    if (!page) {
+        page = 1;
+    }
+
+    if (!limit) {
+        limit = 10;
+    }
+
+    res.status(200).json({"message": "Backoffice API is running - tournament endpoint - tournaments with no condition, page: " + page + ", limit: " + limit});
+});
+
 /**
  * @route GET /tournaments/
  * @desc Test tournaments route
