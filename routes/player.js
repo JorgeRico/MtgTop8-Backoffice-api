@@ -39,6 +39,22 @@ player.get('/:id', (req, res) => {
     res.status(200).json({"message": "Backoffice API is running - players endpoint id: " + id});
 });
 
+/** 
+ * @route GET /players/:id/decks
+ * @desc Test players route with id parameter
+ * @access Public
+ */
+player.get('/:id/decks', (req, res) => {
+    const { id } = req.params;
+    const result = validateIdPlayer(parseInt(id));
+    
+    if (result.error) {      
+        return res.status(400).json({"message": "League id is required or invalid", "errors": JSON.parse(result.error)});
+    }
+
+    res.status(200).json({"message": "Backoffice API is running - player decks endpoint id: " + id});
+});
+
 /**
  * @route PUT /players/:id
  * @desc Test players update route with id parameter

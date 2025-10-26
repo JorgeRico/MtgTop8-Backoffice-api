@@ -1,6 +1,6 @@
 
 import { Router } from 'express';
-import { validateDeck } from '../schemas/deck.js';
+import { validateDeck, validateIdDeck } from '../schemas/deck.js';
 
 var deck = Router();
 
@@ -9,11 +9,31 @@ var deck = Router();
  * @desc Test decks route
  * @access Public
  */
+deck.get('/', (req, res) => {
+    let { page, limit } = req.query;
+
+    if (!page) {
+        page = 1;
+    }
+
+    if (!limit) {
+        limit = 10;
+    }
+
+    res.status(200).json({"message": "Backoffice API is running - decks endpoint - decks with no condition, page: " + page + ", limit: " + limit});
+});
+
+/**
+ * @route GET /decks/
+ * @desc Test decks route
+ * @access Public
+ */
 deck.get('/:id', (req, res) => {
     const { id } = req.params;
-
-    if (!id) {
-        return res.status(400).json({"message": "Deck id is required"});
+    const result = validateIdDeck(parseInt(id));
+    
+    if (result.error) {      
+        return res.status(400).json({"message": "Tournament id is required or invalid", "errors": JSON.parse(result.error)});
     }
 
     res.status(200).json({"message": "Backoffice API is running - decks endpoint id: " + id});
@@ -26,18 +46,19 @@ deck.get('/:id', (req, res) => {
  */
 deck.put('/:id', (req, res) => {
     const { id } = req.params;
-
-    if (!id) {
-        return res.status(400).json({"message": "Deck id is required"});
+    const result = validateIdDeck(parseInt(id));
+    
+    if (result.error) {      
+        return res.status(400).json({"message": "Tournament id is required or invalid", "errors": JSON.parse(result.error)});
     }
 
-    const result = validateDeck(req.body);
+    const resultDeck = validateDeck(req.body);
         
-    if (result.error) {
-        return res.status(400).json({"message": "Invalid deck data", "errors": result.errors});
+    if (resultDeck.error) {
+        return res.status(400).json({"message": "Invalid deck data", "errors": JSON.parse(resultDeck.error)});
     }
 
-    req.status(200).json({"message": "Backoffice API is running - decks endpoint update id: " + id});
+    res.status(200).json({"message": "Backoffice API is running - decks endpoint update id: " + id});
 });
 
 /**
@@ -49,10 +70,10 @@ deck.post('/', (req, res) => {
     const result = validateDeck(req.body);
         
     if (result.error) {
-        return res.status(400).json({"message": "Invalid deck data", "errors": result.errors});
+        return res.status(400).json({"message": "Invalid deck data", "errors": JSON.parse(result.error)});
     }
 
-    req.status(200).json({"message": "Backoffice API is running - decks endpoint create"});
+    res.status(200).json({"message": "Backoffice API is running - decks endpoint create"});
 });
 
 /**
@@ -62,12 +83,13 @@ deck.post('/', (req, res) => {
  */
 deck.delete('/:id', (req, res) => {
     const { id } = req.params;
-
-    if (!id) {
-        return res.status(400).json({"message": "Deck id is required"});
+    const result = validateIdDeck(parseInt(id));
+    
+    if (result.error) {      
+        return res.status(400).json({"message": "Tournament id is required or invalid", "errors": JSON.parse(result.error)});
     }
 
-    req.status(200).json({"message": "Backoffice API is running - decks endpoint delete id: " + id});
+    res.status(200).json({"message": "Backoffice API is running - decks endpoint delete id: " + id});
 });
 
 export default deck;

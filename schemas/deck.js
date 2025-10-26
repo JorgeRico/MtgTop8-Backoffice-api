@@ -8,3 +8,9 @@ const DeckSchema = z.object({
 export const validateDeck = (object) => {
     return DeckSchema.safeParse(object);
 }
+
+const DeckIdSchema = z.number().int().positive("ID must be a positive integer");
+
+export const validateIdDeck = (input) => {
+    return DeckIdSchema.safeParse(input);
+}
