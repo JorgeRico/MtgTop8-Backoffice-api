@@ -1,6 +1,6 @@
 
 import { Router } from 'express';
-import { validateTournament } from '../schemas/tournament.js';
+import { validateTournament, validateIdTournament } from '../schemas/tournament.js';
 
 var tournament = Router();
 
@@ -11,9 +11,10 @@ var tournament = Router();
  */
 tournament.get('/:id', (req, res) => {
     const { id } = req.params;
-
-    if (!id) {
-        return res.status(400).json({"message": "Tournament id is required"});
+    const result = validateIdTournament(parseInt(id));
+    
+    if (result.error) {      
+        return res.status(400).json({"message": "Tournament id is required or invalid", "errors": JSON.parse(result.error)});
     }
 
     res.status(200).json({"message": "Backoffice API is running - tournaments endpoint id: " + id});
@@ -28,9 +29,11 @@ tournament.post('/', (req, res) => {
     const result = validateTournament(req.body);
     
     if (result.error) {
-        return res.status(400).json({"message": "Invalid tournament data", "errors": result.errors});
+        return res.status(400).json({"message": "Invalid tournament data", "errors": JSON.parse(result.error)});
     }
 
+    // {"name":"torneo chulo","players":51,"idLeague":1, "date": "2024-01-21"}
+    // tournament date need to be converted to dd-mm-yy format
     res.status(200).json({"message": "Backoffice API is running - tournaments endpoint create"});
 });
 
@@ -39,19 +42,22 @@ tournament.post('/', (req, res) => {
  * @desc Test tournaments update route with id parameter
  * @access Public
  */
-tournament.put(':id', (req, res) => {
+tournament.put('/:id', (req, res) => {
     const { id } = req.params;
-
-    if (!id) {
-        return res.status(400).json({"message": "Tournament id is required"});
-    }
-
-    const result = validateTournament(req.body);
+    const result = validateIdTournament(parseInt(id));
     
-    if (result.error) {
-        return res.status(400).json({"message": "Invalid tournament data", "errors": result.errors});
+    if (result.error) {      
+        return res.status(400).json({"message": "Tournament id is required or invalid", "errors": JSON.parse(result.error)});
     }
 
+    const resultTournament = validateTournament(req.body);
+    
+    if (resultTournament.error) {
+        return res.status(400).json({"message": "Invalid tournament data", "errors": JSON.parse(resultTournament.error)});
+    }
+
+    // {"name":"torneo chulo","players":51,"idLeague":1, "date": "2024-01-21"}
+    // tournament date need to be converted to dd-mm-yy format
     res.status(200).json({"message": "Backoffice API is running - tournaments endpoint update id: " + id});
 });
 
@@ -62,9 +68,10 @@ tournament.put(':id', (req, res) => {
  */
 tournament.delete('/:id', (req, res) => {
     const { id } = req.params;
-
-    if (!id) {
-        return res.status(400).json({"message": "Tournament id is required"});
+    const result = validateIdTournament(parseInt(id));
+    
+    if (result.error) {      
+        return res.status(400).json({"message": "Tournament id is required or invalid", "errors": JSON.parse(result.error)});
     }   
 
     res.status(200).json({"message": "Backoffice API is running - tournaments endpoint delete id: " + id});
@@ -77,9 +84,10 @@ tournament.delete('/:id', (req, res) => {
  */
 tournament.get('/:id/players', (req, res) => {
     const { id } = req.params;
-
-    if (!id) {
-        return res.status(400).json({"message": "Tournament id is required"});
+    const result = validateIdTournament(parseInt(id));
+    
+    if (result.error) {      
+        return res.status(400).json({"message": "Tournament id is required or invalid", "errors": JSON.parse(result.error)});
     }
     
     res.status(200).json({"message" : " Backoffice API is running - tournaments endpoint - players for tournament id: " + id});
