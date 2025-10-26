@@ -10,6 +10,7 @@ import deck from './routes/deck.js';
 import league from './routes/league.js';
 import player from './routes/player.js';
 import tournament from './routes/tournament.js';
+import card from './routes/card.js';
 
 // load .env file data
 dotenv.config();
@@ -49,6 +50,7 @@ app.use('/leagues', league);
 app.use('/tournaments', tournament);
 app.use('/players', player);
 app.use('/decks', deck);
+app.use('/cards', card);
 
 // not found endpoint handler
 app.use((req, res) => {

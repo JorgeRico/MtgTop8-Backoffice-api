@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { validateCard } from "../schemas/card.js";
+import { validateCard, validateIdCard } from "../schemas/card.js";
 
 var card = Router();
 
@@ -10,10 +10,11 @@ var card = Router();
  */
 card.get('/:id', (req, res) => {
     const { id } = req.params;  
-
-    if (!id) {
-        return res.status(400).json({"message": "Card id is required"});
-    }   
+    const result = validateIdCard(parseInt(id));
+    
+    if (result.error) {      
+        return res.status(400).json({"message": "Card id is required or invalid", "errors": JSON.parse(result.error)});
+    }
 
     res.status(200).json({"message": "Backoffice API is running - cards endpoint id: " + id});
 });
@@ -25,15 +26,16 @@ card.get('/:id', (req, res) => {
  */
 card.put('/:id', (req, res) => {
     const { id } = req.params;  
+    const result = validateIdCard(parseInt(id));
     
-    if (!id) {
-        return res.status(400).json({"message": "Card id is required"});
-    }   
+    if (result.error) {      
+        return res.status(400).json({"message": "Card id is required or invalid", "errors": JSON.parse(result.error)});
+    } 
 
-    const result = validateCard(req.body);
+    const resultCard = validateCard(req.body);
         
-    if (result.error) {
-        return res.status(400).json({"message": "Invalid card data", "errors": result.errors});
+    if (resultCard.error) {
+        return res.status(400).json({"message": "Invalid card data", "errors": JSON.parse(resultCard.error)});
     }
 
     res.status(200).json({"message": "Backoffice API is running - cards endpoint update id: " + id});
@@ -48,7 +50,7 @@ card.post('/', (req, res) => {
     const result = validateCard(req.body);
         
     if (result.error) {
-        return res.status(400).json({"message": "Invalid card data", "errors": result.errors});
+        return res.status(400).json({"message": "Invalid card data", "errors": JSON.parse(result.error)});
     }
 
     res.status(200).json({"message": "Backoffice API is running - cards endpoint create"});
@@ -61,10 +63,11 @@ card.post('/', (req, res) => {
  */
 card.delete('/:id', (req, res) => {
     const { id } = req.params;  
-
-    if (!id) {
-        return res.status(400).json({"message": "Card id is required"});
-    }   
+    const result = validateIdCard(parseInt(id));
+    
+    if (result.error) {      
+        return res.status(400).json({"message": "Card id is required or invalid", "errors": JSON.parse(result.error)});
+    }
 
     res.status(200).json({"message": "Backoffice API is running - cards endpoint delete id: " + id});
 });
