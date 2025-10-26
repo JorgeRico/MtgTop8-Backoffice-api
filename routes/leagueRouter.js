@@ -1,5 +1,6 @@
 
 import { Router } from 'express';
+import { validateLeague } from '../schemas/league.js';
 
 var leagueRouter = Router();
 
@@ -54,6 +55,12 @@ leagueRouter.put('/:id', (req, res) => {
         return res.status(400).json({"message": "League id is required"});
     }
 
+    const result = validateLeague(req.body);
+        
+    if (result.error) {
+        return res.status(400).json({"message": "Invalid league data", "errors": result.errors});
+    }
+
     res.status(200).json({"message": "Backoffice API is running - leagues endpoint - update league id: " + id});
 });
 
@@ -63,6 +70,12 @@ leagueRouter.put('/:id', (req, res) => {
  * @access Public
  */
 leagueRouter.post('/', (req, res) => {
+    const result = validateLeague(req.body);
+        
+    if (result.error) {
+        return res.status(400).json({"message": "Invalid league data", "errors": result.errors});
+    }
+    
     res.status(200).json({"message": "Backoffice API is running - leagues endpoint - create league"});
 });
 

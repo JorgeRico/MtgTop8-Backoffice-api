@@ -1,5 +1,6 @@
 
 import { Router } from 'express';
+import { validatePlayer } from '../schemas/player.js';
 
 var playerRouter = Router();
 
@@ -30,6 +31,12 @@ playerRouter.put('/:id', (req, res)=> {
         return res.status(400).json({"message": "Player id is required"});
     }
 
+    const result = validatePlayer(req.body);
+        
+    if (result.error) {
+        return res.status(400).json({"message": "Invalid player data", "errors": result.errors});
+    }
+
     res.status(200).json({"message": "Backoffice API is running - players endpoint update id: " + id});
 });
 
@@ -39,6 +46,12 @@ playerRouter.put('/:id', (req, res)=> {
  * @access Public
  */
 playerRouter.post('/', (req, res) => {
+    const result = validatePlayer(req.body);
+        
+    if (result.error) {
+        return res.status(400).json({"message": "Invalid player data", "errors": result.errors});
+    }
+
     res.status(200).json({"message": "Backoffice API is running - players endpoint create"});
 });
 

@@ -1,5 +1,6 @@
 
 import { Router } from 'express';
+import { validateDeck } from '../schemas/deck.js';
 
 var deckRouter = Router();
 
@@ -30,6 +31,12 @@ deckRouter.put('/:id', (req, res) => {
         return res.status(400).json({"message": "Deck id is required"});
     }
 
+    const result = validateDeck(req.body);
+        
+    if (result.error) {
+        return res.status(400).json({"message": "Invalid deck data", "errors": result.errors});
+    }
+
     req.status(200).json({"message": "Backoffice API is running - decks endpoint update id: " + id});
 });
 
@@ -39,6 +46,12 @@ deckRouter.put('/:id', (req, res) => {
  * @access Public
  */
 deckRouter.post('/', (req, res) => {
+    const result = validateDeck(req.body);
+        
+    if (result.error) {
+        return res.status(400).json({"message": "Invalid deck data", "errors": result.errors});
+    }
+
     req.status(200).json({"message": "Backoffice API is running - decks endpoint create"});
 });
 

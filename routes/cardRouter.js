@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { validateCard } from "../schemas/card.js";
 
 var cardRouter = Router();
 
@@ -29,6 +30,12 @@ cardRouter.put('/:id', (req, res) => {
         return res.status(400).json({"message": "Card id is required"});
     }   
 
+    const result = validateCard(req.body);
+        
+    if (result.error) {
+        return res.status(400).json({"message": "Invalid card data", "errors": result.errors});
+    }
+
     res.status(200).json({"message": "Backoffice API is running - cards endpoint update id: " + id});
 });
 
@@ -38,6 +45,12 @@ cardRouter.put('/:id', (req, res) => {
  * @access Public
  */
 cardRouter.post('/', (req, res) => {
+    const result = validateCard(req.body);
+        
+    if (result.error) {
+        return res.status(400).json({"message": "Invalid card data", "errors": result.errors});
+    }
+
     res.status(200).json({"message": "Backoffice API is running - cards endpoint create"});
 }); 
 

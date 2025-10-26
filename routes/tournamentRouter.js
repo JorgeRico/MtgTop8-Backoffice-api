@@ -1,5 +1,6 @@
 
 import { Router } from 'express';
+import { validateTournament } from '../schemas/tournament.js';
 
 var tournamentRouter = Router();
 
@@ -24,6 +25,12 @@ tournamentRouter.get('/:id', (req, res) => {
  * @access Public
  */
 tournamentRouter.post('/', (req, res) => {
+    const result = validateTournament(req.body);
+    
+    if (result.error) {
+        return res.status(400).json({"message": "Invalid tournament data", "errors": result.errors});
+    }
+
     res.status(200).json({"message": "Backoffice API is running - tournaments endpoint create"});
 });
 
@@ -37,7 +44,13 @@ tournamentRouter.put(':id', (req, res) => {
 
     if (!id) {
         return res.status(400).json({"message": "Tournament id is required"});
-    }   
+    }
+
+    const result = validateTournament(req.body);
+    
+    if (result.error) {
+        return res.status(400).json({"message": "Invalid tournament data", "errors": result.errors});
+    }
 
     res.status(200).json({"message": "Backoffice API is running - tournaments endpoint update id: " + id});
 });
