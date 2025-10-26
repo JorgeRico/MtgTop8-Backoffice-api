@@ -1,8 +1,5 @@
-// load .env file
-// require('dotenv').config();
-
-// load express
-// const cors        = require('cors');
+import dotenv from 'dotenv';
+import cors from 'cors';
 import express, { json } from "express";
 
 // const swaggerUi   = require('swagger-ui-express');
@@ -14,16 +11,18 @@ import league from './routes/league.js';
 import player from './routes/player.js';
 import tournament from './routes/tournament.js';
 
-
+// load .env file data
+dotenv.config();
 // express api
 const app  = express();
 
 const PORT = process.env.API_PORT || 5000;
 const API  = process.env.API_URL  || 'http://127.0.0.1';
 
-// app.use(cors({
-//   origin: '*'
-// }));
+app.use(cors({
+  origin: '*',
+  credentials: true
+}));
 
 // disable x-powered-by header
 app.disable('x-powered-by');
