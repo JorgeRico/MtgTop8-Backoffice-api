@@ -4,6 +4,11 @@ import { validatePlayer, validateIdPlayer } from '../schemas/player.js';
 
 var player = Router();
 
+/**
+ * @route GET /players/
+ * @desc Test players route
+ * @access Public
+ */
 player.get('/', (req, res) => {
     let { page, limit } = req.query;
 
