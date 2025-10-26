@@ -7,13 +7,12 @@ const TournamentSchema = z.object({
     players  : z.int().min(1).max(512).positive("Number of players must be a positive integer"),
 });
 
-
 export const validateTournament = (object) => {
     return TournamentSchema.safeParse(object);
 }
 
-const CardIdSchema = z.number().int().positive("ID must be a positive integer");
+const TournamentIdSchema = z.number().int().positive("ID must be a positive integer");
 
 export const validateIdTournament = (input) => {
-    return CardIdSchema.safeParse(input);
+    return TournamentIdSchema.safeParse(input);
 }

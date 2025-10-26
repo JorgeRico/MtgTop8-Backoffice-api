@@ -11,8 +11,8 @@ export const validateLeague = (object) => {
     return CardSchema.safeParse(object);
 }
 
-const CardIdSchema = z.number().int().positive("ID must be a positive integer");
+const LeagueIdSchema = z.number().int().positive("ID must be a positive integer");
 
 export const validateIdLeague = (input) => {
-    return CardIdSchema.safeParse(input);
+    return LeagueIdSchema.safeParse(input);
 }
