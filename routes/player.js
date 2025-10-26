@@ -2,14 +2,14 @@
 import { Router } from 'express';
 import { validatePlayer } from '../schemas/player.js';
 
-var playerRouter = Router();
+var player = Router();
 
 /** 
  * @route GET /players/:id
  * @desc Test players route with id parameter
  * @access Public
  */
-playerRouter.get('/:id', (req, res) => {
+player.get('/:id', (req, res) => {
     const { id } = req.params;
 
     if (!id) {
@@ -24,7 +24,7 @@ playerRouter.get('/:id', (req, res) => {
  * @desc Test players update route with id parameter
  * @access Public
  */
-playerRouter.put('/:id', (req, res)=> {
+player.put('/:id', (req, res)=> {
     const { id } = req.params;
 
     if (!id) {
@@ -45,7 +45,7 @@ playerRouter.put('/:id', (req, res)=> {
  * @desc Test players create route
  * @access Public
  */
-playerRouter.post('/', (req, res) => {
+player.post('/', (req, res) => {
     const result = validatePlayer(req.body);
         
     if (result.error) {
@@ -60,7 +60,7 @@ playerRouter.post('/', (req, res) => {
  * @desc Test players delete route with id parameter
  * @access Public
  */
-playerRouter.delete('/:id', (req, res) => {
+player.delete('/:id', (req, res) => {
     const { id } = req.params;
 
     if (!id) {          
@@ -70,4 +70,4 @@ playerRouter.delete('/:id', (req, res) => {
     res.status(200).json({"message": "Backoffice API is running - players endpoint delete id: " + id});
 });
 
-export default playerRouter;
+export default player;

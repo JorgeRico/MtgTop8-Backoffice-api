@@ -2,14 +2,14 @@
 import { Router } from 'express';
 import { validateDeck } from '../schemas/deck.js';
 
-var deckRouter = Router();
+var deck = Router();
 
 /**
  * @route GET /decks/
  * @desc Test decks route
  * @access Public
  */
-deckRouter.get('/:id', (req, res) => {
+deck.get('/:id', (req, res) => {
     const { id } = req.params;
 
     if (!id) {
@@ -24,7 +24,7 @@ deckRouter.get('/:id', (req, res) => {
  * @desc Test decks update route with id parameter
  * @access Public
  */
-deckRouter.put('/:id', (req, res) => {
+deck.put('/:id', (req, res) => {
     const { id } = req.params;
 
     if (!id) {
@@ -45,7 +45,7 @@ deckRouter.put('/:id', (req, res) => {
  * @desc Test decks create route
  * @access Public
  */
-deckRouter.post('/', (req, res) => {
+deck.post('/', (req, res) => {
     const result = validateDeck(req.body);
         
     if (result.error) {
@@ -60,7 +60,7 @@ deckRouter.post('/', (req, res) => {
  * @desc Test decks delete route with id parameter
  * @access Public
  */
-deckRouter.delete('/:id', (req, res) => {
+deck.delete('/:id', (req, res) => {
     const { id } = req.params;
 
     if (!id) {
@@ -70,4 +70,4 @@ deckRouter.delete('/:id', (req, res) => {
     req.status(200).json({"message": "Backoffice API is running - decks endpoint delete id: " + id});
 });
 
-export default deckRouter;
+export default deck;

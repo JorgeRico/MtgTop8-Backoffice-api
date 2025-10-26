@@ -1,14 +1,14 @@
 import { Router } from "express";
 import { validateCard } from "../schemas/card.js";
 
-var cardRouter = Router();
+var card = Router();
 
 /**
  * @route GET /cards/:id
  * @desc Test cards route with id parameter 
  * @access Public
  */
-cardRouter.get('/:id', (req, res) => {
+card.get('/:id', (req, res) => {
     const { id } = req.params;  
 
     if (!id) {
@@ -23,7 +23,7 @@ cardRouter.get('/:id', (req, res) => {
  * @desc Test cards update route with id parameter
  * @access Public
  */
-cardRouter.put('/:id', (req, res) => {
+card.put('/:id', (req, res) => {
     const { id } = req.params;  
     
     if (!id) {
@@ -44,7 +44,7 @@ cardRouter.put('/:id', (req, res) => {
  * @desc Test cards create route
  * @access Public
  */
-cardRouter.post('/', (req, res) => {
+card.post('/', (req, res) => {
     const result = validateCard(req.body);
         
     if (result.error) {
@@ -59,7 +59,7 @@ cardRouter.post('/', (req, res) => {
  * @desc Test cards delete route with id parameter  
  * @access Public
  */
-cardRouter.delete('/:id', (req, res) => {
+card.delete('/:id', (req, res) => {
     const { id } = req.params;  
 
     if (!id) {
@@ -69,4 +69,4 @@ cardRouter.delete('/:id', (req, res) => {
     res.status(200).json({"message": "Backoffice API is running - cards endpoint delete id: " + id});
 });
 
-export default cardRouter;
+export default card;

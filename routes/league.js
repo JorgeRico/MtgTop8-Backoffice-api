@@ -2,14 +2,14 @@
 import { Router } from 'express';
 import { validateLeague } from '../schemas/league.js';
 
-var leagueRouter = Router();
+var league = Router();
 
 /**
  * @route GET /leagues/
  * @desc Test leagues route
  * @access Public
  */
-leagueRouter.get('/', (req, res) => {
+league.get('/', (req, res) => {
     const { active } = req.query;
     let { page, limit } = req.query;
 
@@ -33,7 +33,7 @@ leagueRouter.get('/', (req, res) => {
  * @desc Test leagues route with id parameter
  * @access Public
  */
-leagueRouter.get('/:id', (req, res) => {
+league.get('/:id', (req, res) => {
     const { id } = req.params;
 
     if (!id) {      
@@ -48,7 +48,7 @@ leagueRouter.get('/:id', (req, res) => {
  * @desc Test leagues update route with id parameter
  * @access Public
  */
-leagueRouter.put('/:id', (req, res) => {
+league.put('/:id', (req, res) => {
     const { id } = req.params;
 
     if (!id) {
@@ -69,7 +69,7 @@ leagueRouter.put('/:id', (req, res) => {
  * @desc Test leagues create route
  * @access Public
  */
-leagueRouter.post('/', (req, res) => {
+league.post('/', (req, res) => {
     const result = validateLeague(req.body);
         
     if (result.error) {
@@ -84,7 +84,7 @@ leagueRouter.post('/', (req, res) => {
  * @desc Test leagues delete route with id parameter
  * @access Public
  */
-leagueRouter.delete(':id', (req, res) => {
+league.delete(':id', (req, res) => {
     const { id } = req.params;
 
     if (!id) {
@@ -99,7 +99,7 @@ leagueRouter.delete(':id', (req, res) => {
  * @desc Test leagues tournaments route with id parameter
  * @access Public
  */
-leagueRouter.get(':id/tournaments', (req, res) => {
+league.get(':id/tournaments', (req, res) => {
     const { id } = req.params;
 
     if (!id) {
@@ -109,4 +109,4 @@ leagueRouter.get(':id/tournaments', (req, res) => {
     req.status(200).json({"message": "Backoffice API is running - leagues endpoint - tournaments for league id: " + id});
 });
 
-export default leagueRouter;
+export default league;

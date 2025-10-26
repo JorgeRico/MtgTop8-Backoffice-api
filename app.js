@@ -9,10 +9,10 @@ import express, { json } from "express";
 // const swaggerDocs = require('./swagger.cjs')
 
 // load routers
-import deckRouter from './routes/deckRouter.js';
-import leagueRouter from './routes/leagueRouter.js';
-import playerRouter from './routes/playerRouter.js';
-import tournamentRouter from './routes/tournamentRouter.js';
+import deck from './routes/deck.js';
+import league from './routes/league.js';
+import player from './routes/player.js';
+import tournament from './routes/tournament.js';
 
 
 // express api
@@ -46,10 +46,10 @@ app.get('/', (req, res) => {
 });
 
 // use routers
-app.use('/leagues', leagueRouter);
-app.use('/tournaments', tournamentRouter);
-app.use('/players', playerRouter);
-app.use('/decks', deckRouter);
+app.use('/leagues', league);
+app.use('/tournaments', tournament);
+app.use('/players', player);
+app.use('/decks', deck);
 
 // not found endpoint handler
 app.use((req, res) => {
