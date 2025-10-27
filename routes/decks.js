@@ -2,14 +2,14 @@
 import { Router } from 'express';
 import { validateDeck, validateIdDeck } from '../schemas/decks.js';
 
-var deck = Router();
+export const decksRouter = Router();
 
 /**
  * @route GET /decks/
  * @desc Test decks route
  * @access Public
  */
-deck.get('/', (req, res) => {
+decksRouter.get('/', (req, res) => {
     let { page, limit } = req.query;
 
     if (!page) {
@@ -28,7 +28,7 @@ deck.get('/', (req, res) => {
  * @desc Test decks route
  * @access Public
  */
-deck.get('/:id', (req, res) => {
+decksRouter.get('/:id', (req, res) => {
     const { id } = req.params;
     const result = validateIdDeck(parseInt(id));
     
@@ -44,7 +44,7 @@ deck.get('/:id', (req, res) => {
  * @desc Test decks update route with id parameter
  * @access Public
  */
-deck.put('/:id', (req, res) => {
+decksRouter.put('/:id', (req, res) => {
     const { id } = req.params;
     const result = validateIdDeck(parseInt(id));
     
@@ -54,8 +54,8 @@ deck.put('/:id', (req, res) => {
 
     const resultDeck = validateDeck(req.body);
         
-    if (resultDeck.error) {
-        return res.status(400).json({"message": "Invalid deck data", "errors": JSON.parse(resultDeck.error)});
+    if (resultDecksRouter.error) {
+        return res.status(400).json({"message": "Invalid deck data", "errors": JSON.parse(resultDecksRouter.error)});
     }
 
     res.status(200).json({"message": "Backoffice API is running - decks endpoint update id: " + id});
@@ -66,7 +66,7 @@ deck.put('/:id', (req, res) => {
  * @desc Test decks create route
  * @access Public
  */
-deck.post('/', (req, res) => {
+decksRouter.post('/', (req, res) => {
     const result = validateDeck(req.body);
         
     if (result.error) {
@@ -81,7 +81,7 @@ deck.post('/', (req, res) => {
  * @desc Test decks delete route with id parameter
  * @access Public
  */
-deck.delete('/:id', (req, res) => {
+decksRouter.delete('/:id', (req, res) => {
     const { id } = req.params;
     const result = validateIdDeck(parseInt(id));
     
@@ -91,5 +91,3 @@ deck.delete('/:id', (req, res) => {
 
     res.status(200).json({"message": "Backoffice API is running - decks endpoint delete id: " + id});
 });
-
-export default deck;

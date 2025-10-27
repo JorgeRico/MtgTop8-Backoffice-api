@@ -1,14 +1,14 @@
 import { Router } from "express";
 import { validateCard, validateIdCard } from "../schemas/cards.js";
 
-var card = Router();
+export const cardsRouter = Router();
 
 /**
  * @route GET /cards/:id
  * @desc Test cards route with id parameter 
  * @access Public
  */
-card.get('/:id', (req, res) => {
+cardsRouter.get('/:id', (req, res) => {
     const { id } = req.params;  
     const result = validateIdCard(parseInt(id));
     
@@ -24,7 +24,7 @@ card.get('/:id', (req, res) => {
  * @desc Test cards update route with id parameter
  * @access Public
  */
-card.put('/:id', (req, res) => {
+cardsRouter.put('/:id', (req, res) => {
     const { id } = req.params;  
     const result = validateIdCard(parseInt(id));
     
@@ -34,8 +34,8 @@ card.put('/:id', (req, res) => {
 
     const resultCard = validateCard(req.body);
         
-    if (resultCard.error) {
-        return res.status(400).json({"message": "Invalid card data", "errors": JSON.parse(resultCard.error)});
+    if (resultcardsRouter.error) {
+        return res.status(400).json({"message": "Invalid card data", "errors": JSON.parse(resultcardsRouter.error)});
     }
 
     res.status(200).json({"message": "Backoffice API is running - cards endpoint update id: " + id});
@@ -46,7 +46,7 @@ card.put('/:id', (req, res) => {
  * @desc Test cards create route
  * @access Public
  */
-card.post('/', (req, res) => {
+cardsRouter.post('/', (req, res) => {
     const result = validateCard(req.body);
         
     if (result.error) {
@@ -61,7 +61,7 @@ card.post('/', (req, res) => {
  * @desc Test cards delete route with id parameter  
  * @access Public
  */
-card.delete('/:id', (req, res) => {
+cardsRouter.delete('/:id', (req, res) => {
     const { id } = req.params;  
     const result = validateIdCard(parseInt(id));
     
@@ -71,5 +71,3 @@ card.delete('/:id', (req, res) => {
 
     res.status(200).json({"message": "Backoffice API is running - cards endpoint delete id: " + id});
 });
-
-export default card;

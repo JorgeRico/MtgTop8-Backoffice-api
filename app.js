@@ -6,11 +6,11 @@ import { corsMiddleware } from './middlewares/cors.js';
 // const swaggerDocs = require('./swagger.cjs')
 
 // load routers
-import deck from './routes/decks.js';
-import league from './routes/leagues.js';
-import player from './routes/players.js';
-import tournament from './routes/tournaments.js';
-import card from './routes/cards.js';
+import { decksRouter } from './routes/decks.js';
+import { leaguesRouter } from './routes/leagues.js';
+import { playersRouter } from './routes/players.js';
+import { tournamentsRouter } from './routes/tournaments.js';
+import { cardsRouter } from './routes/cards.js';
 
 // load .env file data
 dotenv.config();
@@ -32,11 +32,11 @@ app.get('/', (req, res) => {
 });
 
 // use routers
-app.use('/leagues', league);
-app.use('/tournaments', tournament);
-app.use('/players', player);
-app.use('/decks', deck);
-app.use('/cards', card);
+app.use('/leagues', leaguesRouter);
+app.use('/tournaments', tournamentsRouter);
+app.use('/players', playersRouter);
+app.use('/decks', decksRouter);
+app.use('/cards', cardsRouter);
 
 // not found endpoint handler
 app.use((req, res) => {

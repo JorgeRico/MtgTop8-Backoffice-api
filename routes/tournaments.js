@@ -2,14 +2,14 @@
 import { Router } from 'express';
 import { validateTournament, validateIdTournament } from '../schemas/tournaments.js';
 
-var tournament = Router();
+export const tournamentsRouter = Router();
 
 /** 
  * @route GET /tournaments/
  * @desc Test tournaments route
  * @access Public
  */
-tournament.get('/', (req, res) => {
+tournamentsRouter.get('/', (req, res) => {
     let { page, limit } = req.query;
 
     if (!page) {
@@ -28,7 +28,7 @@ tournament.get('/', (req, res) => {
  * @desc Test tournaments route
  * @access Public
  */
-tournament.get('/:id', (req, res) => {
+tournamentsRouter.get('/:id', (req, res) => {
     const { id } = req.params;
     const result = validateIdTournament(parseInt(id));
     
@@ -44,7 +44,7 @@ tournament.get('/:id', (req, res) => {
  * @desc Test tournaments create route
  * @access Public
  */
-tournament.post('/', (req, res) => {
+tournamentsRouter.post('/', (req, res) => {
     const result = validateTournament(req.body);
     
     if (result.error) {
@@ -61,7 +61,7 @@ tournament.post('/', (req, res) => {
  * @desc Test tournaments update route with id parameter
  * @access Public
  */
-tournament.put('/:id', (req, res) => {
+tournamentsRouter.put('/:id', (req, res) => {
     const { id } = req.params;
     const result = validateIdTournament(parseInt(id));
     
@@ -71,8 +71,8 @@ tournament.put('/:id', (req, res) => {
 
     const resultTournament = validateTournament(req.body);
     
-    if (resultTournament.error) {
-        return res.status(400).json({"message": "Invalid tournament data", "errors": JSON.parse(resultTournament.error)});
+    if (resultTournamentsRouter.error) {
+        return res.status(400).json({"message": "Invalid tournament data", "errors": JSON.parse(resultTournamentsRouter.error)});
     }
 
     // {"name":"torneo chulo","players":51,"idLeague":1, "date": "2024-01-21"}
@@ -85,7 +85,7 @@ tournament.put('/:id', (req, res) => {
  * @desc Test tournaments delete route with id parameter
  * @access Public
  */
-tournament.delete('/:id', (req, res) => {
+tournamentsRouter.delete('/:id', (req, res) => {
     const { id } = req.params;
     const result = validateIdTournament(parseInt(id));
     
@@ -101,7 +101,7 @@ tournament.delete('/:id', (req, res) => {
  * @desc Test tournaments players route with id parameter
  * @access Public
  */
-tournament.get('/:id/players', (req, res) => {
+tournamentsRouter.get('/:id/players', (req, res) => {
     const { id } = req.params;
     const result = validateIdTournament(parseInt(id));
     
@@ -111,5 +111,3 @@ tournament.get('/:id/players', (req, res) => {
     
     res.status(200).json({"message" : " Backoffice API is running - tournaments endpoint - players for tournament id: " + id});
 });
-
-export default tournament;

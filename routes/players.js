@@ -2,14 +2,14 @@
 import { Router } from 'express';
 import { validatePlayer, validateIdPlayer } from '../schemas/players.js';
 
-var player = Router();
+export const playersRouter = Router();
 
 /**
  * @route GET /players/
  * @desc Test players route
  * @access Public
  */
-player.get('/', (req, res) => {
+playersRouter.get('/', (req, res) => {
     let { page, limit } = req.query;
 
     if (!page) {
@@ -28,7 +28,7 @@ player.get('/', (req, res) => {
  * @desc Test players route with id parameter
  * @access Public
  */
-player.get('/:id', (req, res) => {
+playersRouter.get('/:id', (req, res) => {
     const { id } = req.params;
     const result = validateIdPlayer(parseInt(id));
     
@@ -44,7 +44,7 @@ player.get('/:id', (req, res) => {
  * @desc Test players route with id parameter
  * @access Public
  */
-player.get('/:id/decks', (req, res) => {
+playersRouter.get('/:id/decks', (req, res) => {
     const { id } = req.params;
     const result = validateIdPlayer(parseInt(id));
     
@@ -60,7 +60,7 @@ player.get('/:id/decks', (req, res) => {
  * @desc Test players update route with id parameter
  * @access Public
  */
-player.put('/:id', (req, res)=> {
+playersRouter.put('/:id', (req, res)=> {
     const { id } = req.params;
     const result = validateIdPlayer(parseInt(id));
     
@@ -70,8 +70,8 @@ player.put('/:id', (req, res)=> {
 
     const resultPlayer = validatePlayer(req.body);
         
-    if (resultPlayer.error) {
-        return res.status(400).json({"message": "Invalid player data", "errors": JSON.parse(resultPlayer.error)});
+    if (resultplayersRouter.error) {
+        return res.status(400).json({"message": "Invalid player data", "errors": JSON.parse(resultplayersRouter.error)});
     }
 
     res.status(200).json({"message": "Backoffice API is running - players endpoint update id: " + id});
@@ -82,7 +82,7 @@ player.put('/:id', (req, res)=> {
  * @desc Test players create route
  * @access Public
  */
-player.post('/', (req, res) => {
+playersRouter.post('/', (req, res) => {
     const result = validatePlayer(req.body);
         
     if (result.error) {
@@ -97,7 +97,7 @@ player.post('/', (req, res) => {
  * @desc Test players delete route with id parameter
  * @access Public
  */
-player.delete('/:id', (req, res) => {
+playersRouter.delete('/:id', (req, res) => {
     const { id } = req.params;
     const result = validateIdPlayer(parseInt(id));
     
@@ -107,5 +107,3 @@ player.delete('/:id', (req, res) => {
 
     res.status(200).json({"message": "Backoffice API is running - players endpoint delete id: " + id});
 });
-
-export default player;

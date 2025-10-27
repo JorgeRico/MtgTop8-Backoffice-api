@@ -2,14 +2,14 @@
 import { Router } from 'express';
 import { validateLeague, validateIdLeague } from '../schemas/leagues.js';
 
-var league = Router();
+export const leaguesRouter = Router();
 
 /**
  * @route GET /leagues/
  * @desc Test leagues route
  * @access Public
  */
-league.get('/', (req, res) => {
+leaguesRouter.get('/', (req, res) => {
     const { current, year } = req.query;
     let { page, limit }     = req.query;
 
@@ -35,7 +35,7 @@ league.get('/', (req, res) => {
  * @desc Test leagues route with id parameter
  * @access Public
  */
-league.get('/:id', (req, res) => {
+leaguesRouter.get('/:id', (req, res) => {
     const { id } = req.params;
     const result = validateIdLeague(parseInt(id));
 
@@ -51,7 +51,7 @@ league.get('/:id', (req, res) => {
  * @desc Test leagues update route with id parameter
  * @access Public
  */
-league.put('/:id', (req, res) => {
+leaguesRouter.put('/:id', (req, res) => {
     const { id } = req.params;
     const result = validateIdLeague(parseInt(id));
 
@@ -61,8 +61,8 @@ league.put('/:id', (req, res) => {
 
     const resultLeague = validateLeague(req.body);
         
-    if (resultLeague.error) {
-        return res.status(400).json({"message": "Invalid league data", "errors": JSON.parse(resultLeague.error)});
+    if (resultleaguesRouter.error) {
+        return res.status(400).json({"message": "Invalid league data", "errors": JSON.parse(resultleaguesRouter.error)});
     }
 
     res.status(200).json({"message": "Backoffice API is running - leagues endpoint - update league id: " + id});
@@ -73,7 +73,7 @@ league.put('/:id', (req, res) => {
  * @desc Test leagues create route
  * @access Public
  */
-league.post('/', (req, res) => {
+leaguesRouter.post('/', (req, res) => {
     const result = validateLeague(req.body);
         
     if (result.error) {
@@ -88,7 +88,7 @@ league.post('/', (req, res) => {
  * @desc Test leagues delete route with id parameter
  * @access Public
  */
-league.delete('/:id', (req, res) => {
+leaguesRouter.delete('/:id', (req, res) => {
     const { id } = req.params;
     const result = validateIdLeague(parseInt(id));
 
@@ -104,7 +104,7 @@ league.delete('/:id', (req, res) => {
  * @desc Test leagues tournaments route with id parameter
  * @access Public
  */
-league.get('/:id/tournaments', (req, res) => {
+leaguesRouter.get('/:id/tournaments', (req, res) => {
     const { id } = req.params;
     const result = validateIdLeague(parseInt(id));
 
@@ -114,5 +114,3 @@ league.get('/:id/tournaments', (req, res) => {
 
     res.status(200).json({"message": "Backoffice API is running - leagues endpoint - tournaments for league id: " + id});
 });
-
-export default league;
