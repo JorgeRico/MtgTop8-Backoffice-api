@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { validateCard, validateIdCard } from "../schemas/cards.js";
+import { CardsController } from "../controllers/card.js";
 
 export const cardsRouter = Router();
 
@@ -8,66 +8,25 @@ export const cardsRouter = Router();
  * @desc Test cards route with id parameter 
  * @access Public
  */
-cardsRouter.get('/:id', (req, res) => {
-    const { id } = req.params;  
-    const result = validateIdCard(parseInt(id));
-    
-    if (result.error) {      
-        return res.status(400).json({"message": "Card id is required or invalid", "errors": JSON.parse(result.error)});
-    }
-
-    res.status(200).json({"message": "Backoffice API is running - cards endpoint id: " + id});
-});
+cardsRouter.get('/:id', CardsController.getCardById);
 
 /**
  * @route PUT /cards/:id
  * @desc Test cards update route with id parameter
  * @access Public
  */
-cardsRouter.put('/:id', (req, res) => {
-    const { id } = req.params;  
-    const result = validateIdCard(parseInt(id));
-    
-    if (result.error) {      
-        return res.status(400).json({"message": "Card id is required or invalid", "errors": JSON.parse(result.error)});
-    } 
-
-    const resultCard = validateCard(req.body);
-        
-    if (resultcardsRouter.error) {
-        return res.status(400).json({"message": "Invalid card data", "errors": JSON.parse(resultcardsRouter.error)});
-    }
-
-    res.status(200).json({"message": "Backoffice API is running - cards endpoint update id: " + id});
-});
+cardsRouter.put('/:id', CardsController.updateCardById);
 
 /**
  * @route POST /cards/
  * @desc Test cards create route
  * @access Public
  */
-cardsRouter.post('/', (req, res) => {
-    const result = validateCard(req.body);
-        
-    if (result.error) {
-        return res.status(400).json({"message": "Invalid card data", "errors": JSON.parse(result.error)});
-    }
-
-    res.status(200).json({"message": "Backoffice API is running - cards endpoint create"});
-}); 
+cardsRouter.post('/', CardsController.createCard); 
 
 /**
  * @route DELETE /cards/:id
  * @desc Test cards delete route with id parameter  
  * @access Public
  */
-cardsRouter.delete('/:id', (req, res) => {
-    const { id } = req.params;  
-    const result = validateIdCard(parseInt(id));
-    
-    if (result.error) {      
-        return res.status(400).json({"message": "Card id is required or invalid", "errors": JSON.parse(result.error)});
-    }
-
-    res.status(200).json({"message": "Backoffice API is running - cards endpoint delete id: " + id});
-});
+cardsRouter.delete('/:id', CardsController.deleteCardById);
