@@ -1,6 +1,6 @@
 
 import { Router } from 'express';
-import { validateLeague, validateIdLeague } from '../schemas/league.js';
+import { validateLeague, validateIdLeague } from '../schemas/leagues.js';
 
 var league = Router();
 

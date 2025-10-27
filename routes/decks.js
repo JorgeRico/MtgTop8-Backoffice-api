@@ -1,6 +1,6 @@
 
 import { Router } from 'express';
-import { validateDeck, validateIdDeck } from '../schemas/deck.js';
+import { validateDeck, validateIdDeck } from '../schemas/decks.js';
 
 var deck = Router();
 

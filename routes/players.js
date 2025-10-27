@@ -1,6 +1,6 @@
 
 import { Router } from 'express';
-import { validatePlayer, validateIdPlayer } from '../schemas/player.js';
+import { validatePlayer, validateIdPlayer } from '../schemas/players.js';
 
 var player = Router();
 

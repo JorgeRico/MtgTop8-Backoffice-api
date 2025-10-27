@@ -1,6 +1,6 @@
 
 import { Router } from 'express';
-import { validateTournament, validateIdTournament } from '../schemas/tournament.js';
+import { validateTournament, validateIdTournament } from '../schemas/tournaments.js';
 
 var tournament = Router();
 

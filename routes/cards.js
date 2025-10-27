@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { validateCard, validateIdCard } from "../schemas/card.js";
+import { validateCard, validateIdCard } from "../schemas/cards.js";
 
 var card = Router();
 
