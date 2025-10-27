@@ -14,4 +14,7 @@ export class TournamentModel {
     static async getAllTournaments({ page, limit }) {
         // Logic to get all tournaments from the database
     }
+    static async getPlayersByTournamentId({ id }) {
+        // Logic to get players by tournament ID from the database
+    }
 }
