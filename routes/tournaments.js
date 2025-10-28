@@ -48,5 +48,5 @@ export const createTournamentRouter = ({ tournamentModel }) => {
      */
     tournamentsRouter.get('/:id/players', tournamentController.getPlayersByTournamentId);
 
-    return tournamentsRouter
+    return tournamentsRouter;
 }

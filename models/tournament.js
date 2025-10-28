@@ -40,7 +40,7 @@ export class TournamentModel {
     static async createTournament({ data }) {
         try {
             // Get the last inserted id and increment it by 1
-            const last_id   =  await connection.from('tournaments').select('id').order('id', { ascending: false }).limit(1);
+            const last_id   = await connection.from('tournaments').select('id').order('id', { ascending: false }).limit(1);
             let lastIdValue = parseInt(last_id.data[0].id + 1);
             data.id = lastIdValue;
 
@@ -82,7 +82,6 @@ export class TournamentModel {
             console.error('Error fetching tournaments:', error);
             return null;
         }
-
     }
 
     /**
