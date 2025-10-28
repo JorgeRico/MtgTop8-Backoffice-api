@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { PlayerController } from '../controllers/player.js';
 
 export const createPlayerRouter = ({ playerModel }) => {
-    const playersRouter = Router();
+    const playersRouter    = Router();
     const playerController = new PlayerController({ playerModel });
 
     /**

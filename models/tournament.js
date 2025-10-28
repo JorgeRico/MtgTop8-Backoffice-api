@@ -68,6 +68,7 @@ export class TournamentModel {
             return null;
         } 
     }
+    
     /**
      * Logic to get all tournaments from the database
      * @params current, year, page, limit

@@ -83,7 +83,6 @@ export class PlayerModel {
             console.error('Error fetching players:', error);
             return null;
         }
-        
     }
 
     /**
@@ -97,7 +96,7 @@ export class PlayerModel {
             
             return result;
         } catch (error) {
-            console.error('Error fetching players:', error);
+            console.error('Error fetching decks:', error);
             return null;
         }
     }
