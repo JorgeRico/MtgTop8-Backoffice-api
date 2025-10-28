@@ -1,88 +1,83 @@
-import { validateDeck, validateIdDeck } from '../schemas/decks.js';
-import { DeckModel } from '../models/deck.js';
-
+import { validateDeck } from '../schemas/decks.js';
+import { validateId } from '../schemas/utils.js';
+import { ErrorController } from './errors.js';
+import { UtilsController } from './utils.js';
 export class DeckController {
-    static async getDeckById(req, res){
-        const { id } = req.params;
-        const result = validateIdDeck(parseInt(id));
-        
-        if (result.error) {      
-            return res.status(400).json({"message": "Tournament id is required or invalid", "errors": JSON.parse(result.error)});
-        }
-    
-        // TODO: Fetch card from database using DeckModel
-        const resultDeckModel = await DeckModel.getDeckById({ id: result.data });
-
-        // For now, just return a success message
-        res.status(200).json({"message": "Backoffice API is running - decks endpoint id: " + result.data});
+    constructor( { deckModel }) {
+        this.deckModel = deckModel;
     }
 
-    static async updateDeckById(req, res){
+    getDeckById = async (req, res) => {
         const { id } = req.params;
-        const result = validateIdDeck(parseInt(id));
-        
+        const result = validateId(parseInt(id));
         if (result.error) {      
-            return res.status(400).json({"message": "Tournament id is required or invalid", "errors": JSON.parse(result.error)});
+            return res.status(400).json(ErrorController.getErrorMessage("Deck id is required or invalid", result.error));
+        }
+    
+        const resultDeckModel = await this.deckModel.getDeckById({ id: result.data });
+        if (!resultDeckModel || resultDeckModel.data.length == 0) {
+            return res.status(404).json(ErrorController.emptyError());
+        }
+
+        res.status(200).json(resultDeckModel.data);
+    }
+
+    updateDeckById = async (req, res) => {
+        const { id } = req.params;
+        const result = validateId(parseInt(id));
+        if (result.error) {      
+            return res.status(400).json(ErrorController.getErrorMessage("Deck id is required or invalid", result.error));
         }
     
         const resultDeck = validateDeck(req.body);
-            
         if (resultDeck.error) {
-            return res.status(400).json({"message": "Invalid deck data", "errors": JSON.parse(resultDeck.error)});
+            return res.status(400).json(ErrorController.getErrorMessage("Deck id is required or League invalid values", result.error));
         }
     
-        // TODO: Fetch card from database using DeckModel
-        const resultDeckModel = await DeckModel.updateDeckById({ id: result.data, data: resultDeck.data });
+        const resultDeckModel = await this.deckModel.updateDeckById({id: result.data, data: resultDeck.data});
+        if (!resultDeckModel || resultDeckModel.data.length == 0) {
+            return res.status(404).json(ErrorController.emptyError());
+        }
 
-        // For now, just return a success message
-        res.status(200).json({"message": "Backoffice API is running - decks endpoint update id: " + result.data});
+        res.status(200).json(resultDeckModel);
     }
 
-    static async createDeck(req, res) {
+    createDeck = async (req, res) => {
         const result = validateDeck(req.body);
-            
         if (result.error) {
-            return res.status(400).json({"message": "Invalid deck data", "errors": JSON.parse(result.error)});
+            return res.status(400).json(ErrorController.getErrorMessage("Deck invalid values", result.error));
         }
-    
-        // TODO: Fetch card from database using DeckModel
-        const resultDeckModel = await DeckModel.createDeck({ data: result.data });
+        
+        const resultDeckModel = await this.deckModel.createDeck({data: result.data});
+        if (!resultDeckModel || resultDeckModel.data.length == 0) {
+            return res.status(404).json(ErrorController.emptyError());
+        }
 
-        // For now, just return a success message
-        res.status(200).json({"message": "Backoffice API is running - decks endpoint create"});
+        res.status(201).json(resultDeckModel);
     }
 
-    static async deleteDeckById(req, res) {
+    deleteDeckById = async (req, res) => {
         const { id } = req.params;
-        const result = validateIdDeck(parseInt(id));
-        
+        const result = validateId(parseInt(id));
         if (result.error) {      
-            return res.status(400).json({"message": "Tournament id is required or invalid", "errors": JSON.parse(result.error)});
+            return res.status(400).json(ErrorController.getErrorMessage("Deck id is required or invalid", result.error));
         }
+    
+        const resultDeckModel = await this.deckModel.deleteDeckById({ id: result.data });
 
-        // TODO: Fetch card from database using DeckModel
-        const resultDeckModel = await DeckModel.deleteDeckById({ id: result.data });
-
-        // For now, just return a success message
-        res.status(200).json({"message": "Backoffice API is running - decks endpoint delete id: " + result.data});
+        res.status(204).json(resultDeckModel);
     }
 
-    static async getAllDecks(req, res) {
-        let { page, limit } = req.query;
-    
-        if (!page) {
-            page = 1;
-        }
-    
-        if (!limit) {
-            limit = 10;
-        }
-        
-        // TODO: Fetch card from database using DeckModel
-        const resultDeckModel = await DeckModel.getAllDecks({ page: parseInt(page), limit: parseInt(limit) });
+    getAllDecks = async (req, res) => {
+        const limit = UtilsController.setLimit(req.query.limit);
+        const page  = UtilsController.setPagination(req.query.page, limit);
 
-        // For now, just return a success message
-        res.status(200).json({"message": "Backoffice API is running - decks endpoint - decks with no condition, page: " + page + ", limit: " + limit});
+        const resultDeckModel = await this.deckModel.getAllDecks({ page: parseInt(page), limit: parseInt(limit) });
+        if (!resultDeckModel || resultDeckModel.error) {
+            return res.status(404).json(ErrorController.emptyError());
+        }
+
+        res.status(200).json(resultDeckModel.data);
     }
 
 }

@@ -3,7 +3,7 @@ import express, { json } from "express";
 import { corsMiddleware } from './middlewares/cors.js';
 
 // load routers
-import { decksRouter } from './routes/decks.js';
+import { createDeckRouter } from './routes/decks.js';
 import { createLeagueRouter } from './routes/leagues.js';
 import { createPlayerRouter } from './routes/players.js';
 import { createTournamentRouter } from './routes/tournaments.js';
@@ -33,7 +33,7 @@ export const createApp = ({ leagueModel, tournamentModel, playerModel, deckModel
     app.use('/leagues', createLeagueRouter({ leagueModel: leagueModel }));
     app.use('/tournaments', createTournamentRouter({ tournamentModel: tournamentModel }));
     app.use('/players', createPlayerRouter({ playerModel: playerModel }));
-    app.use('/decks', decksRouter);
+    app.use('/decks', createDeckRouter({ deckModel: deckModel }));
     app.use('/cards', cardsRouter);
 
     // not found endpoint handler
