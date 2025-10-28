@@ -1,22 +1,25 @@
 import { validateLeague, validateLeagueParcial } from '../schemas/leagues.js';
 import { validateId } from '../schemas/utils.js';
-import { LeagueModel } from '../models/league.js';
 import { ErrorController } from './errors.js';
 import { UtilsController } from './utils.js';
 export class LeagueController {
+    constructor({ leagueModel }) {
+        this.leagueModel = leagueModel;
+    }
+    
     /**
      * Get league by ID
      * @params req, res 
      * @returns data
      */
-    static async getLeagueById(req, res) {
+    getLeagueById = async (req, res) => {
         const { id } = req.params;
         const result = validateId(parseInt(id));
         if (result.error) {      
             return res.status(400).json(ErrorController.getErrorMessage("League id is required or invalid", result.error));
         }
     
-        const resultLeagueModel = await LeagueModel.getLeagueById({ id: result.data });
+        const resultLeagueModel = await this.leagueModel.getLeagueById({ id: result.data });
         if (!resultLeagueModel || resultLeagueModel.data.length == 0) {
             return res.status(404).json(ErrorController.emptyError());
         }
@@ -29,7 +32,7 @@ export class LeagueController {
      * @params req, res 
      * @returns data 
      */
-    static async updateLeagueById(req, res) {
+    updateLeagueById = async (req, res) => {
         const { id } = req.params;
         const result = validateId(parseInt(id));
         if (result.error) {      
@@ -41,7 +44,7 @@ export class LeagueController {
             return res.status(400).json(ErrorController.getErrorMessage("League id is required or League invalid values", result.error));
         }
     
-        const resultLeagueModel = await LeagueModel.updateLeagueById({id: result.data, data: resultLeague.data});
+        const resultLeagueModel = await this.leagueModel.updateLeagueById({id: result.data, data: resultLeague.data});
         if (!resultLeagueModel || resultLeagueModel.data.length == 0) {
             return res.status(404).json(ErrorController.emptyError());
         }
@@ -54,13 +57,13 @@ export class LeagueController {
      * @params req, res 
      * @returns 
      */
-    static async createLeague(req, res){
+    createLeague = async (req, res) =>{
         const result = validateLeague(req.body);
         if (result.error) {
             return res.status(400).json(ErrorController.getErrorMessage("League invalid values", result.error));
         }
         
-        const resultLeagueModel = await LeagueModel.createLeague({data: result.data});
+        const resultLeagueModel = await this.leagueModel.createLeague({data: result.data});
         if (!resultLeagueModel || resultLeagueModel.data.length == 0) {
             return res.status(404).json(ErrorController.emptyError());
         }
@@ -73,14 +76,14 @@ export class LeagueController {
      * @params req, res 
      * @returns  
      */
-    static async deleteLeagueById(req, res) {
+    deleteLeagueById = async (req, res) => {
         const { id } = req.params;
         const result = validateId(parseInt(id));
         if (result.error) {      
             return res.status(400).json(ErrorController.getErrorMessage("League id is required or invalid", result.error));
         }
     
-        const resultLeagueModel = await LeagueModel.deleteLeagueById({ id: result.data });
+        const resultLeagueModel = await this.leagueModel.deleteLeagueById({ id: result.data });
 
         res.status(204).json(resultLeagueModel);
     }
@@ -90,14 +93,14 @@ export class LeagueController {
      * @params req, res 
      * @returns data
      */
-    static async getTournamentsByLeagueId(req, res){
+    getTournamentsByLeagueId = async (req, res) =>{
         const { id } = req.params;
         const result = validateId(parseInt(id));
         if (result.error) {      
             return res.status(400).json(ErrorController.getErrorMessage("League id is required or invalid", result.error));
         }
 
-        const resultLeagueModel = await LeagueModel.getTournamentsByLeagueId({ id: result.data });
+        const resultLeagueModel = await this.leagueModel.getTournamentsByLeagueId({ id: result.data });
         if (!resultLeagueModel || resultLeagueModel.data.length == 0) {
             return res.status(404).json(ErrorController.emptyError());
         }
@@ -111,7 +114,7 @@ export class LeagueController {
      * @params  req, res 
      * @returns data
      */
-    static async getAllLeagues(req, res) {
+    getAllLeagues = async (req, res) => {
         const data = validateLeagueParcial(req.query);
         if (data.error) {      
             return res.status(400).json(ErrorController.getErrorMessage("Invalid params", data.error));
@@ -120,7 +123,7 @@ export class LeagueController {
         const limit = UtilsController.setLimit(req.query.limit);
         const page  = UtilsController.setPagination(req.query.page, limit);
 
-        const resultLeagueModel = await LeagueModel.getAllLeagues({ data: data, page: parseInt(page), limit: parseInt(limit) });
+        const resultLeagueModel = await this.leagueModel.getAllLeagues({ data: data, page: parseInt(page), limit: parseInt(limit) });
         if (!resultLeagueModel || resultLeagueModel.error) {
             return res.status(404).json(ErrorController.emptyError());
         }

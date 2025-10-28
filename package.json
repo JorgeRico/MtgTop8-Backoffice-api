@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "node --watch app.js",
-    "dev": "node --watch app.js",
+    "start": "node --watch server-supabase.js",
+    "dev": "node --watch server-supabase.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

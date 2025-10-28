@@ -1,20 +1,23 @@
 import { validateTournament } from '../schemas/tournaments.js';
-import { TournamentModel } from '../models/tournament.js';
 import { ErrorController } from './errors.js';
 import { validateId } from '../schemas/utils.js';
 import { UtilsController } from './utils.js';
 
 export class TournamentController {
+    constructor({ tournamentModel }) {
+        this.tournamentModel = tournamentModel;
+    }
+
     /**
      * Get all tournaments with pagination
      * @params req, res 
      * @returns data 
      */
-    static async getAllTournaments(req, res) {
+    getAllTournaments = async (req, res) => {
         const limit = UtilsController.setLimit(req.query.limit);
         const page  = UtilsController.setPagination(req.query.page, limit);
 
-        const resultTournamentModel = await TournamentModel.getAllTournaments({ page: parseInt(page), limit: parseInt(limit) });
+        const resultTournamentModel = await this.tournamentModel.getAllTournaments({ page: parseInt(page), limit: parseInt(limit) });
         if (!resultTournamentModel || resultTournamentModel.error) {
             return res.status(404).json(ErrorController.emptyError());
         }
@@ -27,7 +30,7 @@ export class TournamentController {
      * @params req, res 
      * @returns 
      */
-    static async getTournamentById(req, res) {
+    getTournamentById = async (req, res) => {
         const { id } = req.params;
         const result = validateId(parseInt(id));
         
@@ -35,7 +38,7 @@ export class TournamentController {
             return res.status(400).json({"message": "Tournament id is required or invalid", "errors": JSON.parse(result.error)});
         }
     
-        const resultTournamentModel = await TournamentModel.getTournamentById( { id: result.data})
+        const resultTournamentModel = await this.tournamentModel.getTournamentById( { id: result.data})
         if (!resultTournamentModel || resultTournamentModel.data.length == 0) {
             return res.status(404).json(ErrorController.emptyError());
         }
@@ -48,7 +51,7 @@ export class TournamentController {
      * @params req, res 
      * @returns data 
      */
-    static async createTournament(req, res) {
+    createTournament = async (req, res) => {
         const result = validateTournament(req.body);
         if (result.error) {
             return res.status(400).json(ErrorController.getErrorMessage("Tournament invalid values", result.error));
@@ -56,7 +59,7 @@ export class TournamentController {
         
         result.data.date = await TournamentController.getDateConverted(result.data.date);
 
-        const resultTournamentModel = await TournamentModel.createTournament({data: result.data});
+        const resultTournamentModel = await this.tournamentModel.createTournament({data: result.data});
         if (!resultTournamentModel || resultTournamentModel.data.length == 0) {
             return res.status(404).json(ErrorController.emptyError());
         }
@@ -68,7 +71,7 @@ export class TournamentController {
      * Date conversion
      * Create Web date format (scrapped)
      */
-    static async getDateConverted(value) {
+    getDateConverted(value) {
         let dateValue   = value.toLocaleDateString('es-ES')
         let splitValues = dateValue.split('/');
 
@@ -84,7 +87,7 @@ export class TournamentController {
      * @params req, res 
      * @returns 
      */
-    static async updateTournamentById(req, res) {
+    updateTournamentById = async (req, res) => {
         const { id } = req.params;
         const result = validateId(parseInt(id));
         if (result.error) {      
@@ -98,7 +101,7 @@ export class TournamentController {
     
         resultTournament.data.date = await TournamentController.getDateConverted(resultTournament.data.date);
 
-        const resultTournamentModel = await TournamentModel.updateTournamentById({id: result.data, data: resultTournament.data});
+        const resultTournamentModel = await this.tournamentModel.updateTournamentById({id: result.data, data: resultTournament.data});
         if (!resultTournamentModel || resultTournamentModel.data.length == 0) {
             return res.status(404).json(ErrorController.emptyError());
         }
@@ -111,14 +114,14 @@ export class TournamentController {
      * @params req, res 
      * @returns 
      */
-    static async deleteTournamentById(req, res) {
+    deleteTournamentById = async (req, res) => {
         const { id } = req.params;
         const result = validateId(parseInt(id));
         if (result.error) {      
             return res.status(400).json(ErrorController.getErrorMessage("Tournament id is required or invalid", result.error));
         }
     
-        const resultTournamentModel = await TournamentModel.deleteTournamentById({ id: result.data });
+        const resultTournamentModel = await this.tournamentModel.deleteTournamentById({ id: result.data });
         if (!resultTournamentModel || resultTournamentModel.data.length == 0) {
             return res.status(404).json(ErrorController.emptyError());
         }
@@ -131,14 +134,14 @@ export class TournamentController {
      * @params req,  res 
      * @returns 
      */
-    static async getPlayersByTournamentId(req, res) {
+    getPlayersByTournamentId = async (req, res) => {
         const { id } = req.params;
         const result = validateId(parseInt(id));
         if (result.error) {      
             return res.status(400).json(ErrorController.getErrorMessage("Tournament id is required or invalid", result.error));
         }
         
-        const resultTournamentModel = await TournamentModel.getPlayersByTournamentId({ id: result.data });
+        const resultTournamentModel = await this.tournamentModel.getPlayersByTournamentId({ id: result.data });
         if (!resultTournamentModel || resultTournamentModel.data.length == 0) {
             return res.status(404).json(ErrorController.emptyError());
         }
