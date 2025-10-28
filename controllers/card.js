@@ -1,69 +1,71 @@
-import { validateCard, validateIdCard } from "../schemas/cards.js";
-import { CardModel } from "../models/card.js";
+import { validateCard } from "../schemas/cards.js";
+import { validateId } from "../schemas/utils.js";
+import { ErrorController } from "./errors.js";
+import { UtilsController } from "./utils.js";
 
 export class CardsController {
-    static async getCardById(req, res) {
-        // const { id } = req.params;  
-        const result = validateIdCard(parseInt(req.params.id));
-        
-        if (result.error) {      
-            return res.status(400).json({"message": "Card id is required or invalid", "errors": JSON.parse(result.error)});
-        }
-    
-        // TODO: Fetch card from database using CardModel
-        const resultModelCard = await CardModel.getCardById({ id: result.data });
-
-        // For now, just return a success message
-        res.status(200).json({"message": "Backoffice API is running - cards endpoint id: " + result.data});
+    constructor ({ cardModel }) {
+        this.cardModel = cardModel;
     }
 
-    static async updateCardById(req, res) {
-        const { id } = req.params;  
-        const result = validateIdCard(parseInt(id));
-        
+    getCardById = async (req, res) => {
+        const { id } = req.params;
+        const result = validateId(parseInt(id));
         if (result.error) {      
-            return res.status(400).json({"message": "Card id is required or invalid", "errors": JSON.parse(result.error)});
-        } 
+            return res.status(400).json(ErrorController.getErrorMessage("Card id is required or invalid", result.error));
+        }
     
-        const resultCard = validateCard(req.body);
-            
-        if (resultCard.error) {
-            return res.status(400).json({"message": "Invalid card data", "errors": JSON.parse(resultCard.error)});
+        const resultCardModel = await this.cardModel.getCardById({ id: result.data });
+        if (!resultCardModel || resultCardModel.data.length == 0) {
+            return res.status(404).json(ErrorController.emptyError());
         }
 
-        // TODO: Fetch card from database using CardModel
-        const resultModelCard = await CardModel.updateCardById({id: result.data, data: resultCard.data});
-    
-        // For now, just return a success message
-        res.status(200).json({"message": "Backoffice API is running - cards endpoint update id: " + result.data});
+        res.status(200).json(resultCardModel.data);
     }
 
-    static async createCard(req, res) {
-        const result = validateCard(req.body);
-            
+    updateCardById = async (req, res) => {
+        const { id } = req.params;
+        const result = validateId(parseInt(id));
+        if (result.error) {      
+            return res.status(400).json(ErrorController.getErrorMessage("Card id is required or invalid", result.error));
+        }
+    
+        const resultDeck = validateDeck(req.body);
+        if (resultDeck.error) {
+            return res.status(400).json(ErrorController.getErrorMessage("Card id is required or League invalid values", result.error));
+        }
+    
+        const resultCardModel = await this.cardModel.updateCardById({id: result.data, data: resultDeck.data});
+        if (!resultCardModel || resultCardModel.data.length == 0) {
+            return res.status(404).json(ErrorController.emptyError());
+        }
+
+        res.status(200).json(resultCardModel);
+    }
+
+    createCard = async (req, res) => {
+        const result = validateDeck(req.body);
         if (result.error) {
-            return res.status(400).json({"message": "Invalid card data", "errors": JSON.parse(result.error)});
+            return res.status(400).json(ErrorController.getErrorMessage("Card invalid values", result.error));
+        }
+        
+        const resultCardModel = await this.cardModel.createCard({data: result.data});
+        if (!resultCardModel || resultCardModel.data.length == 0) {
+            return res.status(404).json(ErrorController.emptyError());
         }
 
-        // TODO: Fetch card from database using CardModel
-        const resultModelCard = await CardModel.createCard({data: result.data});
-
-        // For now, just return a success message
-        res.status(200).json({"message": "Backoffice API is running - cards endpoint create"});
+        res.status(201).json(resultCardModel);
     }
 
-    static async deleteCardById(req, res) {
-        const { id } = req.params;  
-        const result = validateIdCard(parseInt(id));
-        
+    deleteCardById = async (req, res) => {
+        const { id } = req.params;
+        const result = validateId(parseInt(id));
         if (result.error) {      
-            return res.status(400).json({"message": "Card id is required or invalid", "errors": JSON.parse(result.error)});
+            return res.status(400).json(ErrorController.getErrorMessage("Card id is required or invalid", result.error));
         }
+    
+        const resultCardModel = await this.cardModel.deleteCardById({ id: result.data });
 
-        // TODO: Fetch card from database using CardModel
-        const resultModelCard = await CardModel.deleteCardById({ id: res });
-
-        // For now, just return a success message
-        res.status(200).json({"message": "Backoffice API is running - cards endpoint delete id: " + result.data});
+        res.status(204).json(resultCardModel);
     }
 }

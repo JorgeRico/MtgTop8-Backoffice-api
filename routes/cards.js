@@ -1,32 +1,38 @@
 import { Router } from "express";
 import { CardsController } from "../controllers/card.js";
 
-export const cardsRouter = Router();
+export const createCardRouter = ({ cardModel }) => {
+    const cardsRouter = Router();
+    const cardsController = new CardsController({ cardModel });
 
-/**
- * @route GET /cards/:id
- * @desc Test cards route with id parameter 
- * @access Public
- */
-cardsRouter.get('/:id', CardsController.getCardById);
+    /**
+     * @route GET /cards/:id
+     * @desc Test cards route with id parameter 
+     * @access Public
+     */
+    cardsRouter.get('/:id', cardsController.getCardById);
 
-/**
- * @route PUT /cards/:id
- * @desc Test cards update route with id parameter
- * @access Public
- */
-cardsRouter.put('/:id', CardsController.updateCardById);
+    /**
+     * @route PUT /cards/:id
+     * @desc Test cards update route with id parameter
+     * @access Public
+     */
+    cardsRouter.put('/:id', cardsController.updateCardById);
 
-/**
- * @route POST /cards/
- * @desc Test cards create route
- * @access Public
- */
-cardsRouter.post('/', CardsController.createCard); 
+    /**
+     * @route POST /cards/
+     * @desc Test cards create route
+     * @access Public
+     */
+    cardsRouter.post('/', cardsController.createCard); 
 
-/**
- * @route DELETE /cards/:id
- * @desc Test cards delete route with id parameter  
- * @access Public
- */
-cardsRouter.delete('/:id', CardsController.deleteCardById);
+    /**
+     * @route DELETE /cards/:id
+     * @desc Test cards delete route with id parameter  
+     * @access Public
+     */
+    cardsRouter.delete('/:id', cardsController.deleteCardById);
+
+    return cardsRouter;
+}
+

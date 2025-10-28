@@ -7,7 +7,7 @@ import { createDeckRouter } from './routes/decks.js';
 import { createLeagueRouter } from './routes/leagues.js';
 import { createPlayerRouter } from './routes/players.js';
 import { createTournamentRouter } from './routes/tournaments.js';
-import { cardsRouter } from './routes/cards.js';
+import { createCardRouter } from './routes/cards.js';
 
 export const createApp = ({ leagueModel, tournamentModel, playerModel, deckModel, cardModel }) => {
     // load .env file data
@@ -34,7 +34,7 @@ export const createApp = ({ leagueModel, tournamentModel, playerModel, deckModel
     app.use('/tournaments', createTournamentRouter({ tournamentModel: tournamentModel }));
     app.use('/players', createPlayerRouter({ playerModel: playerModel }));
     app.use('/decks', createDeckRouter({ deckModel: deckModel }));
-    app.use('/cards', cardsRouter);
+    app.use('/cards', createCardRouter({ cardModel: cardModel }));
 
     // not found endpoint handler
     app.use((req, res) => {

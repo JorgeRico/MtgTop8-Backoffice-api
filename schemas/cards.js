@@ -12,9 +12,3 @@ const CardSchema = z.object({
 export const validateCard = (object) => {
     return CardSchema.safeParse(object);
 }
-
-const CardIdSchema = z.number().int().positive("ID must be a positive integer");
-
-export const validateIdCard = (input) => {
-    return CardIdSchema.safeParse(input);
-}
