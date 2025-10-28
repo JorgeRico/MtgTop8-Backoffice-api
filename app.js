@@ -5,7 +5,7 @@ import { corsMiddleware } from './middlewares/cors.js';
 // load routers
 import { decksRouter } from './routes/decks.js';
 import { createLeagueRouter } from './routes/leagues.js';
-import { playersRouter } from './routes/players.js';
+import { createPlayerRouter } from './routes/players.js';
 import { createTournamentRouter } from './routes/tournaments.js';
 import { cardsRouter } from './routes/cards.js';
 
@@ -32,7 +32,7 @@ export const createApp = ({ leagueModel, tournamentModel, playerModel, deckModel
     // use routers
     app.use('/leagues', createLeagueRouter({ leagueModel: leagueModel }));
     app.use('/tournaments', createTournamentRouter({ tournamentModel: tournamentModel }));
-    app.use('/players', playersRouter);
+    app.use('/players', createPlayerRouter({ playerModel: playerModel }));
     app.use('/decks', decksRouter);
     app.use('/cards', cardsRouter);
 

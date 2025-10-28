@@ -10,9 +10,3 @@ const PlayerSchema = z.object({
 export const validatePlayer = (object) => {
     return PlayerSchema.safeParse(object);
 }
-
-const PlayerIdSchema = z.number().int().positive("ID must be a positive integer");
-
-export const validateIdPlayer = (input) => {
-    return PlayerIdSchema.safeParse(input);
-}

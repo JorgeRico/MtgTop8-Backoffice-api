@@ -1,102 +1,133 @@
-import { validatePlayer, validateIdPlayer } from '../schemas/players.js';
-import { PlayerModel } from '../models/player.js';
+import { validatePlayer } from '../schemas/players.js';
+import { validateId } from '../schemas/utils.js';
+import { UtilsController } from './utils.js';
+import { ErrorController } from './errors.js';
 
 export class PlayerController {
-    static async getPlayerById(req, res){
-        let { page, limit } = req.query;
-    
-        if (!page) {
-            page = 1;
-        }
-    
-        if (!limit) {
-            limit = 10;
-        }
-
-        // TODO: Fetch card from database using LeagueModel
-        const resultPlayerModel = await PlayerModel.getAllPlayers({ page: parseInt(page), limit: parseInt(limit) });
-
-        // For now, just return a success message
-        res.status(200).json({"message": "Backoffice API is running - players endpoint - players with no condition, page: " + page + ", limit: " + limit});
+    constructor ({ playerModel }) {
+        this.playerModel = playerModel
     }
 
-    static async getPlayerDetailsById(req, res) {
-        const { id } = req.params;
-        const result = validateIdPlayer(parseInt(id));
-        
-        if (result.error) {      
-            return res.status(400).json({"message": "League id is required or invalid", "errors": JSON.parse(result.error)});
-        }
-    
-        // TODO: Fetch card from database using LeagueModel
-        const resultPlayerModel = await PlayerModel.getPlayerById({ id: result.data });
+    /**
+     * Get all players with pagination
+     * @params req, res 
+     * @returns data 
+     */
+    getAllPlayers = async (req, res) => {
+        const limit = UtilsController.setLimit(req.query.limit);
+        const page  = UtilsController.setPagination(req.query.page, limit);
 
-        // For now, just return a success message
-        res.status(200).json({"message": "Backoffice API is running - players endpoint id: " + result.data});
+        const resultPlayerModel = await this.playerModel.getAllPlayers({ page: parseInt(page), limit: parseInt(limit) });
+        if (!resultPlayerModel || resultPlayerModel.error) {
+            return res.status(404).json(ErrorController.emptyError());
+        }
+
+        res.status(200).json(resultPlayerModel.data);
     }
 
-    static async getPlayerDecksById(req, res) {
+    /**
+     * Get player info
+     * @params req,  res 
+     * @returns data
+     */
+    getPlayerById = async (req, res) => {
         const { id } = req.params;
-        const result = validateIdPlayer(parseInt(id));
+        const result = validateId(parseInt(id));
         
         if (result.error) {      
-            return res.status(400).json({"message": "League id is required or invalid", "errors": JSON.parse(result.error)});
+            return res.status(400).json({"message": "Player id is required or invalid", "errors": JSON.parse(result.error)});
         }
     
-        // TODO: Fetch card from database using LeagueModel
-        const resultPlayerModel = await PlayerModel.getPlayerById({ id: result.data });
+        const resultPlayerModel = await this.playerModel.getPlayerById( { id: result.data})
+        if (!resultPlayerModel || resultPlayerModel.data.length == 0) {
+            return res.status(404).json(ErrorController.emptyError());
+        }
 
-        // For now, just return a success message
-        res.status(200).json({"message": "Backoffice API is running - player decks endpoint id: " + result.data});
+        res.status(200).json(resultPlayerModel.data);
     }
 
-    static async updatePlayerById(req, res){
+    /**
+     * Get Player deck
+     * @params req, res 
+     * @returns 
+     */
+    getPlayerDeck = async (req, res) =>  {
         const { id } = req.params;
-        const result = validateIdPlayer(parseInt(id));
+        const result = validateId(parseInt(id));
         
         if (result.error) {      
-            return res.status(400).json({"message": "League id is required or invalid", "errors": JSON.parse(result.error)});
+            return res.status(400).json({"message": "Player id is required or invalid", "errors": JSON.parse(result.error)});
+        }
+    
+        const resultPlayerModel = await this.playerModel.getPlayerDeck( { id: result.data})
+        if (!resultPlayerModel || resultPlayerModel.data.length == 0) {
+            return res.status(404).json(ErrorController.emptyError());
+        }
+
+        res.status(200).json(resultPlayerModel.data);
+    }
+
+    /**
+     * Update player info
+     * @params req, res 
+     * @returns 
+     */
+    updatePlayerById = async (req, res) => {
+        const { id } = req.params;
+        const result = validateId(parseInt(id));
+        if (result.error) {      
+            return res.status(400).json(ErrorController.getErrorMessage("Player id is required or invalid", result.error));
         }
     
         const resultPlayer = validatePlayer(req.body);
-            
         if (resultPlayer.error) {
-            return res.status(400).json({"message": "Invalid player data", "errors": JSON.parse(resultPlayer.error)});
+            return res.status(400).json(ErrorController.getErrorMessage("Player id is required or Player invalid values", result.error));
         }
     
-        // TODO: Fetch card from database using LeagueModel
-        const resultPlayerModel = await PlayerModel.updatePlayerById({ id: result.data, data: resultPlayer.data });
+        const resultPlayerModel = await this.playerModel.updatePlayerById({id: result.data, data: resultPlayer.data});
+        if (!resultPlayerModel || resultPlayerModel.data.length == 0) {
+            return res.status(404).json(ErrorController.emptyError());
+        }
 
-        // For now, just return a success message
-        res.status(200).json({"message": "Backoffice API is running - players endpoint update id: " + result.data});
+        res.status(200).json(resultPlayerModel);
     }
 
-    static async createPlayer(req, res) {
+    /**
+     * Create player
+     * @params req, res 
+     * @returns data 
+     */
+    createPlayer = async (req, res) =>  {
         const result = validatePlayer(req.body);
-            
         if (result.error) {
-            return res.status(400).json({"message": "Invalid player data", "errors": JSON.parse(result.error)});
+            return res.status(400).json(ErrorController.getErrorMessage("Player invalid values", result.error));
         }
-    
-        // TODO: Fetch card from database using LeagueModel
-        const resultPlayerModel = await PlayerModel.createPlayer({ data: result.data });
+        
+        const resultPlayerModel = await this.playerModel.createPlayer({data: result.data});
+        if (!resultPlayerModel || resultPlayerModel.data.length == 0) {
+            return res.status(404).json(ErrorController.emptyError());
+        }
 
-        // For now, just return a success message
-        res.status(200).json({"message": "Backoffice API is running - players endpoint create"});
+        res.status(201).json(resultPlayerModel);
     }
 
-    static async deletePlayerById(req, res) {
+    /**
+     * Delete player
+     * @params req, res 
+     * @returns data
+     */
+    deletePlayerById = async (req, res) =>  {
         const { id } = req.params;
-        const result = validateIdPlayer(parseInt(id));
-        
+        const result = validateId(parseInt(id));
         if (result.error) {      
-            return res.status(400).json({"message": "League id is required or invalid", "errors": JSON.parse(result.error)});
+            return res.status(400).json(ErrorController.getErrorMessage("Player id is required or invalid", result.error));
+        }
+    
+        const resultPlayerModel = await this.playerModel.deletePlayerById({ id: result.data });
+        if (!resultPlayerModel || resultPlayerModel.data.length == 0) {
+            return res.status(404).json(ErrorController.emptyError());
         }
 
-        // TODO: Fetch card from database using LeagueModel
-        const resultPlayerModel = await PlayerModel.deletePlayerById({ id: result.data });
-
-        // For now, just return a success message
-        res.status(200).json({"message": "Backoffice API is running - players endpoint delete id: " + result.data});
+        res.status(204).json(resultPlayerModel);
     }
 }
