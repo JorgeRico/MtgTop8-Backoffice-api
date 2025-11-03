@@ -63,7 +63,6 @@ export class DeckModel {
      */
     static async deleteDeckById({ id }) {
         try {
-
             // delete idDeck on Player relation before delete deck
             const result = await connection.from('players').update([{'idDeck': null}]).eq('idDeck', id).select();
             if (!result.error) {

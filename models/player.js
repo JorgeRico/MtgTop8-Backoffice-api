@@ -55,14 +55,30 @@ export class PlayerModel {
 
     /**
      * Logic to delete a player by ID from the database
+     * Delete player associated deck
+     * Delete deck cards
+     * Delete player
      * @params id
      * @returns data
      */
     static async deletePlayerById({ id }) {
         try {
-            const data = await connection.from('players').delete().eq('id', id).select();
+            const result = await connection.from('players').select().eq('id', id);
 
-            return data;
+            if (!result.error) {
+                if (!cards.error) {
+                    // delete deck
+                    const data = await connection.from('players').delete().eq('id', id).select();
+                    if (!data.error) {
+                        // delete cards deck
+                        const cards = await connection.from('cards').delete().eq('idDeck', result.data[0].idDeck).select(); 
+                        // delete deck
+                        const deck  = await connection.from('decks').delete().eq('id', result.data[0].idDeck).select();
+
+                        return data;
+                    }
+                }
+            }
         } catch (error) {
             console.error('Error deleting player by ID:', error);
             return null;
