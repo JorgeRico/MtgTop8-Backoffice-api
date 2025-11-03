@@ -81,9 +81,9 @@ export class LeagueModel {
             if (data.data.current && !data.data.year) {
                 result = await connection.from('leagues').select().eq('current', data.data.current).order('id', { ascending: true }).range(page, limit);
             } else if (data.data.year && !data.data.current) {
-                result = await connection.from('leagues').select().eq('year', data.data.year).range(page, limit);
+                result = await connection.from('leagues').select().eq('year', data.data.year).order('id', { ascending: true }).range(page, limit);
             } else {
-                result = await connection.from('leagues').select().range(page, limit);
+                result = await connection.from('leagues').select().order('id', { ascending: true }).range(page, limit);
             }
 
             return result;
