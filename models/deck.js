@@ -55,14 +55,25 @@ export class DeckModel {
 
     /**
      * Logic to delete a deck by ID from the database
+     * Delete idDeck from player
+     * Delete cards related to deck
+     * Delete deck
      * @params id
      * @returns 
      */
     static async deleteDeckById({ id }) {
         try {
-            const data = await connection.from('decks').delete().eq('id', id).select();
 
-            return data;
+            // delete idDeck on Player relation before delete deck
+            const result = await connection.from('players').update([{'idDeck': null}]).eq('idDeck', id).select();
+            if (!result.error) {
+                // delete deck cards
+                const cards = await connection.from('cards').delete().eq('idDeck', id).select(); 
+                if (!cards.error) {
+                    const data  = await connection.from('decks').delete().eq('id', id).select();
+                    return data;
+                }
+            }
         } catch (error) {
             console.error('Error deleting Deck by ID:', error);
             return null;
