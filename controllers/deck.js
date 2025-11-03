@@ -1,4 +1,4 @@
-import { validateDeck } from '../schemas/decks.js';
+import { validateDeck, validateDeckParcial } from '../schemas/decks.js';
 import { validateId } from '../schemas/utils.js';
 import { ErrorController } from './errors.js';
 import { UtilsController } from './utils.js';
@@ -29,7 +29,7 @@ export class DeckController {
             return res.status(400).json(ErrorController.getErrorMessage("Deck id is required or invalid", result.error));
         }
     
-        const resultDeck = validateDeck(req.body);
+        const resultDeck = validateDeckParcial(req.body);
         if (resultDeck.error) {
             return res.status(400).json(ErrorController.getErrorMessage("Deck id is required or League invalid values", result.error));
         }
@@ -43,7 +43,7 @@ export class DeckController {
     }
 
     createDeck = async (req, res) => {
-        const result = validateDeck(req.body);
+        const result = validateDeckParcial(req.body);
         if (result.error) {
             return res.status(400).json(ErrorController.getErrorMessage("Deck invalid values", result.error));
         }
