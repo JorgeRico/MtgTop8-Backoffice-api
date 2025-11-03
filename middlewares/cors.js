@@ -2,8 +2,9 @@ import cors from 'cors';
 
 const ACCEPTED_ORIGINS = [
   // 'http://example.com',
-  // 'http://127.0.0.1:5000',
-  '*'
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1',
 ];
 
 export const corsMiddleware = ( { acceptedOrigins = ACCEPTED_ORIGINS } = {}) => cors({

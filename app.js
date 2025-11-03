@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import express, { json } from "express";
 import { corsMiddleware } from './middlewares/cors.js';
+import { authenticateUser } from './middlewares/firebase.js';
 
 // load routers
 import { createDeckRouter } from './routes/decks.js';
@@ -27,6 +28,15 @@ export const createApp = ({ leagueModel, tournamentModel, playerModel, deckModel
     // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
     app.get('/', (req, res) => {
         res.status(200).json({"message": "Backoffice API is running"});
+    });
+
+    /**
+     * Endpoint validating firebase user
+     * If everything is ok, continues to the url
+     * If it's not authenticated, sends authentication error
+     */
+    app.use((req, res, next) => {
+        authenticateUser(req, res, next);
     });
 
     // use routers
