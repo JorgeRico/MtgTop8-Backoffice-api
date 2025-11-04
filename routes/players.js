@@ -13,6 +13,13 @@ export const createPlayerRouter = ({ playerModel }) => {
      */
     playersRouter.get('/', playerController.getAllPlayers);
 
+    /**
+     * @route GET /players/num
+     * @desc Test players route
+     * @access Public
+     */
+    playersRouter.get('/num', playerController.getNumPlayers);
+
     /** 
      * @route GET /players/:id
      * @desc Test players route with id parameter

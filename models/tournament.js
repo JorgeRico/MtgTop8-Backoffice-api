@@ -116,4 +116,20 @@ export class TournamentModel {
             return null;
         }
     }
+
+    /**
+     * Get number of tournaments on DB
+     * @params
+     * @returns 
+     */
+    static async getNumTournaments() {
+        try {
+            const result = await connection.from('tournaments').select('*', { count: 'exact', head: true });
+
+            return result;
+        } catch (error) {
+            console.error('Error fetching tournaments:', error);
+            return null;
+        }
+    }
 }

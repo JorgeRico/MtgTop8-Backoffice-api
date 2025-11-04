@@ -116,4 +116,20 @@ export class PlayerModel {
             return null;
         }
     }
+
+    /**
+     * Get number of players on DB
+     * @params
+     * @returns 
+     */
+    static async getNumPlayers() {
+        try {
+            const result = await connection.from('players').select('*', { count: 'exact', head: true });
+
+            return result;
+        } catch (error) {
+            console.error('Error fetching players:', error);
+            return null;
+        }
+    }
 }

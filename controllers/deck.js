@@ -7,6 +7,11 @@ export class DeckController {
         this.deckModel = deckModel;
     }
 
+    /**
+     * Get data deck by id
+     * @params  req, res 
+     * @returns data
+     */
     getDeckById = async (req, res) => {
         const { id } = req.params;
         const result = validateId(parseInt(id));
@@ -22,6 +27,11 @@ export class DeckController {
         res.status(200).json(resultDeckModel.data);
     }
 
+    /**
+     * Update data deck
+     * @params  req, res 
+     * @returns data
+     */
     updateDeckById = async (req, res) => {
         const { id } = req.params;
         const result = validateId(parseInt(id));
@@ -42,6 +52,11 @@ export class DeckController {
         res.status(200).json(resultDeckModel);
     }
 
+    /**
+     * Create new deck
+     * @params  req, res 
+     * @returns data
+     */
     createDeck = async (req, res) => {
         const result = validateDeckParcial(req.body);
         if (result.error) {
@@ -56,6 +71,11 @@ export class DeckController {
         res.status(201).json(resultDeckModel);
     }
 
+    /**
+     * Delete deck
+     * @params  req, res 
+     * @returns data
+     */
     deleteDeckById = async (req, res) => {
         const { id } = req.params;
         const result = validateId(parseInt(id));
@@ -68,9 +88,14 @@ export class DeckController {
         res.status(204).json(resultDeckModel);
     }
 
+    /**
+     * Get all decks from DB
+     * @params  req, res 
+     * @returns data
+     */
     getAllDecks = async (req, res) => {
-        const limit = UtilsController.setLimit(req.query.limit);
-        const page  = UtilsController.setPagination(req.query.page, limit);
+        const page  = UtilsController.setPagination(req.query.page, req.query.limit);
+        const limit = UtilsController.setLimit(page, req.query.limit);
 
         const resultDeckModel = await this.deckModel.getAllDecks({ page: parseInt(page), limit: parseInt(limit) });
         if (!resultDeckModel || resultDeckModel.error) {
@@ -78,6 +103,20 @@ export class DeckController {
         }
 
         res.status(200).json(resultDeckModel.data);
+    }
+
+    /**
+     * Get number of deck items on db
+     * @params  req, res 
+     * @returns data
+     */
+    getNumDecks = async (req, res) => {
+        const resultDeckModel = await this.deckModel.getNumDecks();
+        if (!resultDeckModel || resultDeckModel.error) {
+            return res.status(404).json(ErrorController.emptyError());
+        }
+
+        res.status(200).json({count: resultDeckModel.count});
     }
 
 }

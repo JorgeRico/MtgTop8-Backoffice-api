@@ -130,4 +130,18 @@ export class PlayerController {
 
         res.status(204).json(resultPlayerModel);
     }
+
+    /**
+     * Get number of player items on db
+     * @params  req, res 
+     * @returns data
+     */
+    getNumPlayers = async (req, res) => {
+        const resultPlayerModel = await this.playerModel.getNumDecks();
+        if (!resultPlayerModel || resultPlayerModel.error) {
+            return res.status(404).json(ErrorController.emptyError());
+        }
+
+        res.status(200).json({count: resultPlayerModel.count});
+    }
 }

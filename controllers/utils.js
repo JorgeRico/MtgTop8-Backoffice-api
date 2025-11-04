@@ -15,14 +15,14 @@ export class UtilsController {
     }
 
     /**
-     * @params limit 
+     * @params page, limit 
      * @returns 
      */
-    static setLimit(limit) {
+    static setLimit(page, limit) {
         if (!limit || parseInt(limit) <= 0) {
             limit = 10;
         }
 
-        return limit;
+        return parseInt(page) + parseInt(limit);
     }
 }

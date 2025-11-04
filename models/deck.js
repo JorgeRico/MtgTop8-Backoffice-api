@@ -85,9 +85,24 @@ export class DeckModel {
      * @returns 
      */
     static async getAllDecks({ page, limit }) {
-        // Logic to get all decks from the database
         try {
             const result = await connection.from('decks').select().order('id', { ascending: false }).range(page, limit);
+
+            return result;
+        } catch (error) {
+            console.error('Error fetching decks:', error);
+            return null;
+        }
+    }
+
+    /**
+     * Get number of decks on DB
+     * @params
+     * @returns 
+     */
+    static async getNumDecks() {
+        try {
+            const result = await connection.from('decks').select('*', { count: 'exact', head: true });
 
             return result;
         } catch (error) {

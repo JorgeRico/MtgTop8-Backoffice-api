@@ -14,6 +14,13 @@ export const createTournamentRouter = ({ tournamentModel }) => {
     tournamentsRouter.get('/', tournamentController.getAllTournaments);
 
     /**
+     * @route GET /tournaments/num
+     * @desc Test torunaments route
+     * @access Public
+     */
+    tournamentsRouter.get('/num', tournamentController.getNumTournaments);
+
+    /**
      * @route GET /tournaments/
      * @desc Test tournaments route
      * @access Public

@@ -130,4 +130,18 @@ export class LeagueController {
 
         res.status(200).json(resultLeagueModel.data);
     }
+
+    /**
+     * Get number of league items on db
+     * @params  req, res 
+     * @returns data
+     */
+    getNumLeagues = async (req, res) => {
+        const resultLeagueModel = await this.leagueModel.getNumLeagues();
+        if (!resultLeagueModel || resultLeagueModel.error) {
+            return res.status(404).json(ErrorController.emptyError());
+        }
+
+        res.status(200).json({count: resultLeagueModel.count});
+    }
 }

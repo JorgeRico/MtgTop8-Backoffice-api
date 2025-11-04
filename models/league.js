@@ -136,4 +136,20 @@ export class LeagueModel {
             return null;
         }
     }
+
+    /**
+     * Get number of leagues on DB
+     * @params
+     * @returns 
+     */
+    static async getNumLeagues() {
+        try {
+            const result = await connection.from('leagues').select('*', { count: 'exact', head: true });
+
+            return result;
+        } catch (error) {
+            console.error('Error fetching leagues:', error);
+            return null;
+        }
+    }
 }

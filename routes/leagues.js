@@ -14,6 +14,13 @@ export const createLeagueRouter = ({ leagueModel }) => {
     leaguesRouter.get('/', leagueController.getAllLeagues);
 
     /**
+     * @route GET /leagues/num
+     * @desc Test leagues route
+     * @access Public
+     */
+    leaguesRouter.get('/num', leagueController.getNumLeagues);
+
+    /**
      * @route GET /leagues/:id
      * @desc Test leagues route with id parameter
      * @access Public

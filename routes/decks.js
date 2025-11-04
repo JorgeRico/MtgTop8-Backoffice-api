@@ -14,6 +14,13 @@ export const createDeckRouter = ({ deckModel }) => {
     decksRouter.get('/', deckController.getAllDecks);
 
     /**
+     * @route GET /decks/num
+     * @desc Test decks route
+     * @access Public
+     */
+    decksRouter.get('/num', deckController.getNumDecks);
+
+    /**
      * @route GET /decks/
      * @desc Test decks route
      * @access Public

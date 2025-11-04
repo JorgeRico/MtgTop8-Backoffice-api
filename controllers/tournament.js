@@ -148,4 +148,18 @@ export class TournamentController {
 
         res.status(200).json(resultTournamentModel);
     }
+
+    /**
+     * Get number of tournament items on db
+     * @params  req, res 
+     * @returns data
+     */
+    getNumTournaments = async (req, res) => {
+        const resultTournamentModel = await this.tournamentModel.getNumDecks();
+        if (!resultTournamentModel || resultTournamentModel.error) {
+            return res.status(404).json(ErrorController.emptyError());
+        }
+
+        res.status(200).json({count: resultTournamentModel.count});
+    }
 }
