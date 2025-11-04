@@ -55,11 +55,39 @@ export class LeagueModel {
 
     /**
      * Logic to delete a league by ID from the database
+     * Delete league tournament Players + cars + decks
+     * Delete league tournaments
+     * Delete League
      * @params id
      * @returns data
      */
     static async deleteLeagueById({ id }) { 
         try {
+            const result = await connection.from('tournaments').select('id').eq('idLeague', id);
+
+            let tournamentsList = []
+            result.data.forEach(function(item) {
+                tournamentsList.push(item.id);
+            })
+
+            // delete info from tournaments
+            const tournamentDecks = await connection.from('players').select('idDeck').in('idTournament', tournamentsList);
+
+            let deckList = []
+            tournamentDecks.data.forEach(function(item) {
+                deckList.push(item.idDeck);
+            })
+            
+            const players = await connection.from('players').delete().in('idTournament', tournamentsList).select();
+            const cards   = await connection.from('cards').delete().in('idDeck', deckList).select();
+            const decks   = await connection.from('decks').delete().in('id', deckList).select();
+            
+            // delete tournaments
+            if (!players.error && !cards.error && !decks.error) {
+                await connection.from('tournaments').delete().in('id', tournamentsList).select();
+            }
+
+            // delete league
             const data = await connection.from('leagues').delete().eq('id', id).select();
 
             return data;
