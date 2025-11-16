@@ -99,7 +99,7 @@ export class TournamentController {
             return res.status(400).json(ErrorController.getErrorMessage("Tournament id is required or Tournament invalid values", result.error));
         }
     
-        resultTournament.data.date = await TournamentController.getDateConverted(resultTournament.data.date);
+        resultTournament.data.date = this.getDateConverted(resultTournament.data.date);
 
         const resultTournamentModel = await this.tournamentModel.updateTournamentById({id: result.data, data: resultTournament.data});
         if (!resultTournamentModel || resultTournamentModel.data.length == 0) {
@@ -155,7 +155,7 @@ export class TournamentController {
      * @returns data
      */
     getNumTournaments = async (req, res) => {
-        const resultTournamentModel = await this.tournamentModel.getNumDecks();
+        const resultTournamentModel = await this.tournamentModel.getNumTournaments();
         if (!resultTournamentModel || resultTournamentModel.error) {
             return res.status(404).json(ErrorController.emptyError());
         }

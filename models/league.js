@@ -111,7 +111,11 @@ export class LeagueModel {
             } else if (data.data.year && !data.data.current) {
                 result = await connection.from('leagues').select().eq('year', data.data.year).order('id', { ascending: true }).range(page, limit);
             } else {
-                result = await connection.from('leagues').select().order('id', { ascending: true }).range(page, limit);
+                if (page >=0 && limit>=10) {
+                    result = await connection.from('leagues').select().order('id', { ascending: true }).range(page, limit);
+                } else {
+                    result = await connection.from('leagues').select('id, name').order('id', { ascending: true })
+                }
             }
 
             return result;
