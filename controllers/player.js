@@ -137,7 +137,7 @@ export class PlayerController {
      * @returns data
      */
     getNumPlayers = async (req, res) => {
-        const resultPlayerModel = await this.playerModel.getNumDecks();
+        const resultPlayerModel = await this.playerModel.getNumPlayers();
         if (!resultPlayerModel || resultPlayerModel.error) {
             return res.status(404).json(ErrorController.emptyError());
         }
