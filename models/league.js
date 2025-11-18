@@ -109,8 +109,8 @@ export class LeagueModel {
             if (!page && !limit && !data) {
                 result = await connection.from('leagues').select('id, name').order('id', { ascending: true })
             }
-            
-            if (page && limit && !data) {
+
+            if (page >= 0 && limit > 1 &&  data.data.current === undefined && data.data.year === undefined) {
                 result = await connection.from('leagues').select().order('id', { ascending: true }).range(page, limit);
             }
 
