@@ -68,4 +68,36 @@ export class CardModel {
             return null;
         } 
     }
+
+    /**
+     * Logic to get a all cards from the database
+     * @params id
+     * @returns 
+     */
+    static async getCards({ page, limit }) {
+        try {
+            const data = await connection.from('cards').select().order('id', { ascending: false }).range(page, limit);
+            
+            return data;
+        } catch (error) {
+            console.error('Error fetching Cards Cards:', error);
+            return null;
+        }
+    }
+
+    /**
+     * Get number of card on DB
+     * @params
+     * @returns 
+     */
+    static async getNumCards() {
+        try {
+            const result = await connection.from('cards').select('*', { count: 'exact', head: true });
+
+            return result;
+        } catch (error) {
+            console.error('Error fetching cards:', error);
+            return null;
+        }
+    }
 }

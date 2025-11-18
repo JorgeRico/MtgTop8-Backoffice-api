@@ -28,6 +28,13 @@ export const createDeckRouter = ({ deckModel }) => {
     decksRouter.get('/:id', deckController.getDeckById);
 
     /**
+     * @route GET /decks/:id/cards
+     * @desc Test decks route
+     * @access Public
+     */
+    decksRouter.get('/:id/cards', deckController.getDeckCards);
+
+    /**
      * @route PUT /decks/:id
      * @desc Test decks update route with id parameter
      * @access Public

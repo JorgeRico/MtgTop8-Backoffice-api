@@ -1,4 +1,4 @@
-import { validateDeck, validateDeckParcial } from '../schemas/decks.js';
+import { validateDeckParcial } from '../schemas/decks.js';
 import { validateId } from '../schemas/utils.js';
 import { ErrorController } from './errors.js';
 import { UtilsController } from './utils.js';
@@ -20,6 +20,26 @@ export class DeckController {
         }
     
         const resultDeckModel = await this.deckModel.getDeckById({ id: result.data });
+        if (!resultDeckModel || resultDeckModel.data.length == 0) {
+            return res.status(404).json(ErrorController.emptyError());
+        }
+
+        res.status(200).json(resultDeckModel.data);
+    }
+
+    /**
+     * Get cards deck by id
+     * @params  req, res 
+     * @returns data
+     */
+    getDeckCards = async (req, res) => {
+        const { id } = req.params;
+        const result = validateId(parseInt(id));
+        if (result.error) {      
+            return res.status(400).json(ErrorController.getErrorMessage("Deck id is required or invalid", result.error));
+        }
+    
+        const resultDeckModel = await this.deckModel.getDeckCards({ id: result.data });
         if (!resultDeckModel || resultDeckModel.data.length == 0) {
             return res.status(404).json(ErrorController.emptyError());
         }

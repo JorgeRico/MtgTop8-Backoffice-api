@@ -68,4 +68,36 @@ export class CardsController {
 
         res.status(204).json(resultCardModel);
     }
+
+    /**
+     * Get all cards from DB
+     * @params  req, res 
+     * @returns data
+     */
+    getCards = async (req, res) => {
+        const page  = UtilsController.setPagination(req.query.page, req.query.limit);
+        const limit = UtilsController.setLimit(page, req.query.limit);
+
+        const resultCardModel = await this.cardModel.getCards({ page: parseInt(page), limit: parseInt(limit) });
+        if (!resultCardModel || resultCardModel.error) {
+            return res.status(404).json(ErrorController.emptyError());
+        }
+
+        res.status(200).json(resultCardModel.data);
+    }
+
+    /**
+     * Get number of card items on db
+     * @params  req, res 
+     * @returns data
+     */
+    getNumCards = async (req, res) => {
+        const resultCardModel = await this.cardModel.getNumCards();
+        if (!resultCardModel || resultCardModel.error) {
+            return res.status(404).json(ErrorController.emptyError());
+        }
+
+        res.status(200).json({count: resultCardModel.count});
+    }
+
 }

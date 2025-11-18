@@ -14,7 +14,23 @@ export class DeckModel {
             console.error('Error fetching Deck by ID:', error);
             return null;
         }
-    }   
+    }
+
+    /**
+     * Logic to get a deck by ID from the database
+     * @params id
+     * @returns 
+     */
+    static async getDeckCards({ id }) {
+        try {
+            const data = await connection.from('cards').select().eq('idDeck', id);
+            
+            return data;
+        } catch (error) {
+            console.error('Error fetching Deck Cards:', error);
+            return null;
+        }
+    }
 
     /**
      * Logic to update a deck by ID in the database

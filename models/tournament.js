@@ -92,7 +92,13 @@ export class TournamentModel {
      */
     static async getAllTournaments({ page, limit }) {
         try {
-            const result = await connection.from('tournaments').select().order('id', { ascending: false }).range(page, limit);
+            let result = null;
+            
+            if (page >=0 && limit>=10) {
+                result = await connection.from('tournaments').select().order('id', { ascending: true }).range(page, limit);
+            } else {
+                result = await connection.from('tournaments').select().order('id', { ascending: true })
+            }
             
             return result;
         } catch (error) {
