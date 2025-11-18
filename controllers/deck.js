@@ -115,7 +115,7 @@ export class DeckController {
      */
     getAllDecks = async (req, res) => {
         const page  = UtilsController.setPagination(req.query.page, req.query.limit);
-        const limit = UtilsController.setLimit(page, req.query.limit);
+        const limit = UtilsController.setLimit(req.query.page, req.query.limit);   
 
         const resultDeckModel = await this.deckModel.getAllDecks({ page: parseInt(page), limit: parseInt(limit) });
         if (!resultDeckModel || resultDeckModel.error) {

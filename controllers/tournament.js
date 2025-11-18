@@ -14,8 +14,8 @@ export class TournamentController {
      * @returns data 
      */
     getAllTournaments = async (req, res) => {
-        const limit = UtilsController.setLimit(req.query.limit);
-        const page  = UtilsController.setPagination(req.query.page, limit);
+        const page  = UtilsController.setPagination(req.query.page, req.query.limit);
+        const limit = UtilsController.setLimit(req.query.page, req.query.limit);        
 
         const resultTournamentModel = await this.tournamentModel.getAllTournaments({ page: parseInt(page), limit: parseInt(limit) });
         if (!resultTournamentModel || resultTournamentModel.error) {

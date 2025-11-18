@@ -120,8 +120,8 @@ export class LeagueController {
             return res.status(400).json(ErrorController.getErrorMessage("Invalid params", data.error));
         }
 
-        const limit = UtilsController.setLimit(req.query.limit);
-        const page  = UtilsController.setPagination(req.query.page, limit);
+        const page  = UtilsController.setPagination(req.query.page, req.query.limit);
+        const limit = UtilsController.setLimit(req.query.page, req.query.limit);   
 
         const resultLeagueModel = await this.leagueModel.getAllLeagues({ data: data, page: parseInt(page), limit: parseInt(limit) });
         if (!resultLeagueModel || resultLeagueModel.error) {

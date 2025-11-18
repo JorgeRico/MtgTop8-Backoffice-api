@@ -5,13 +5,7 @@ export class UtilsController {
      * @returns 
      */
     static setPagination(page, limit) {
-        if (!page || parseInt(page) <= 0) {
-            page = 0;
-        } else {
-            page = (parseInt(page) - 1) * parseInt(limit);
-        }
-    
-        return page;
+        return (page-1) * parseInt(limit);
     }
 
     /**
@@ -19,10 +13,6 @@ export class UtilsController {
      * @returns 
      */
     static setLimit(page, limit) {
-        if (!limit || parseInt(limit) <= 0) {
-            limit = 10;
-        }
-
-        return parseInt(page) + parseInt(limit);
+        return (parseInt(page) * parseInt(limit))-1;
     }
 }

@@ -106,16 +106,20 @@ export class LeagueModel {
         try {
             let result = null;
 
-            if (data.data.current && !data.data.year) {
+            if (!page && !limit && !data) {
+                result = await connection.from('leagues').select('id, name').order('id', { ascending: true })
+            }
+            
+            if (page && limit && !data) {
+                result = await connection.from('leagues').select().order('id', { ascending: true }).range(page, limit);
+            }
+
+            if (data && data.data.current && !data.data.year) {
                 result = await connection.from('leagues').select().eq('current', data.data.current).order('id', { ascending: true }).range(page, limit);
-            } else if (data.data.year && !data.data.current) {
+            }
+
+            if (data && !data.data.current && data.data.year) {
                 result = await connection.from('leagues').select().eq('year', data.data.year).order('id', { ascending: true }).range(page, limit);
-            } else {
-                if (page >=0 && limit>=10) {
-                    result = await connection.from('leagues').select().order('id', { ascending: true }).range(page, limit);
-                } else {
-                    result = await connection.from('leagues').select('id, name').order('id', { ascending: true })
-                }
             }
 
             return result;

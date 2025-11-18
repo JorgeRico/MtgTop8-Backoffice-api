@@ -94,7 +94,7 @@ export class TournamentModel {
         try {
             let result = null;
             
-            if (page >=0 && limit>=10) {
+            if (page && limit) {
                 result = await connection.from('tournaments').select().order('id', { ascending: true }).range(page, limit);
             } else {
                 result = await connection.from('tournaments').select().order('id', { ascending: true })

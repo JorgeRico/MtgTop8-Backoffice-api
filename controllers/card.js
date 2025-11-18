@@ -76,7 +76,7 @@ export class CardsController {
      */
     getCards = async (req, res) => {
         const page  = UtilsController.setPagination(req.query.page, req.query.limit);
-        const limit = UtilsController.setLimit(page, req.query.limit);
+        const limit = UtilsController.setLimit(req.query.page, req.query.limit);   
 
         const resultCardModel = await this.cardModel.getCards({ page: parseInt(page), limit: parseInt(limit) });
         if (!resultCardModel || resultCardModel.error) {
