@@ -55,5 +55,12 @@ export const createTournamentRouter = ({ tournamentModel }) => {
      */
     tournamentsRouter.get('/:id/players', tournamentController.getPlayersByTournamentId);
 
+    /**
+     * @route GET /tournaments/:id/decks
+     * @desc Test tournaments decks route with id parameter
+     * @access Public
+     */
+    tournamentsRouter.get('/:id/decks', tournamentController.getTournamentDecks);
+
     return tournamentsRouter;
 }

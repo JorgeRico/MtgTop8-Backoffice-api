@@ -38,8 +38,29 @@ export class TournamentController {
             return res.status(400).json({"message": "Tournament id is required or invalid", "errors": JSON.parse(result.error)});
         }
     
-        const resultTournamentModel = await this.tournamentModel.getTournamentById( { id: result.data})
+        const resultTournamentModel = await this.tournamentModel.getTournamentById( { id: result.data} )
         if (!resultTournamentModel || resultTournamentModel.data.length == 0) {
+            return res.status(404).json(ErrorController.emptyError());
+        }
+
+        res.status(200).json(resultTournamentModel.data);
+    }
+
+     /**
+     * Get Tournament Decks by id
+     * @params req, res 
+     * @returns 
+     */
+    getTournamentDecks = async (req, res) => {
+        const { id } = req.params;
+        const result = validateId(parseInt(id));
+        
+        if (result.error) {      
+            return res.status(400).json({"message": "Tournament id is required or invalid", "errors": JSON.parse(result.error)});
+        }
+    
+        const resultTournamentModel = await this.tournamentModel.getTournamentDecks( { id: result.data} )
+        if (!resultTournamentModel) {
             return res.status(404).json(ErrorController.emptyError());
         }
 
@@ -146,7 +167,7 @@ export class TournamentController {
             return res.status(404).json(ErrorController.emptyError());
         }
 
-        res.status(200).json(resultTournamentModel);
+        res.status(200).json(resultTournamentModel.data);
     }
 
     /**

@@ -124,17 +124,17 @@ export class TournamentModel {
     }
 
     /**
-     * Get number of tournaments on DB
-     * @params
-     * @returns 
+     * Logic to get decks by tournament ID from the database
+     * @params id
+     * @returns data
      */
-    static async getNumTournaments() {
+    static async getTournamentDecks({ id }) {
         try {
-            const result = await connection.from('tournaments').select('*', { count: 'exact', head: true });
-
+            const result = await connection.from('players').select('id, name, decks(*)').eq('idTournament', id);
+            
             return result;
         } catch (error) {
-            console.error('Error fetching tournaments:', error);
+            console.error('Error fetching tournament decks:', error);
             return null;
         }
     }
