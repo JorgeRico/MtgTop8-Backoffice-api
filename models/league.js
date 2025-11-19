@@ -106,7 +106,7 @@ export class LeagueModel {
         try {
             let result = null;
 
-            if (!page && !limit && !data) {
+            if (isNaN(page)) {
                 result = await connection.from('leagues').select('id, name').order('id', { ascending: true })
             }
 
