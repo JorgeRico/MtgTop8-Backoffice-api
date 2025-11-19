@@ -1,4 +1,4 @@
-import { validateCard } from "../schemas/cards.js";
+import { validateCard, validateCardParcial } from "../schemas/cards.js";
 import { validateId } from "../schemas/utils.js";
 import { ErrorController } from "./errors.js";
 import { UtilsController } from "./utils.js";
@@ -30,7 +30,7 @@ export class CardsController {
             return res.status(400).json(ErrorController.getErrorMessage("Card id is required or invalid", result.error));
         }
     
-        const resultDeck = validateDeck(req.body);
+        const resultDeck = validateCardParcial(req.body);
         if (resultDeck.error) {
             return res.status(400).json(ErrorController.getErrorMessage("Card id is required or League invalid values", result.error));
         }
@@ -44,7 +44,7 @@ export class CardsController {
     }
 
     createCard = async (req, res) => {
-        const result = validateDeck(req.body);
+        const result = validateCard(req.body);
         if (result.error) {
             return res.status(400).json(ErrorController.getErrorMessage("Card invalid values", result.error));
         }

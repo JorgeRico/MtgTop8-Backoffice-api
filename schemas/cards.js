@@ -12,3 +12,7 @@ const CardSchema = z.object({
 export const validateCard = (object) => {
     return CardSchema.safeParse(object);
 }
+
+export const validateCardParcial = (input) => {
+    return CardSchema.partial().safeParse(input)
+}
