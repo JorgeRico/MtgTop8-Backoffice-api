@@ -16,10 +16,7 @@ export const createApp = ({ leagueModel, tournamentModel, playerModel, deckModel
     // express api
     const app  = express();
     // cors middleware
-    app.use(cors({
-  origin: '*'
-}));
-    // app.use(corsMiddleware());
+    app.use(corsMiddleware());
     // disable x-powered-by header
     app.disable('x-powered-by');
     // for parsing application/json
