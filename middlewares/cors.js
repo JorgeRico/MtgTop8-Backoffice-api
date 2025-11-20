@@ -26,6 +26,7 @@ export const corsMiddleware = ( { acceptedOrigins = ACCEPTED_ORIGINS } = {}) => 
     //     return callback(new Error('Not allowed by CORS'));
     // },
     // credentials: false,
+    allowedHeaders: ['Content-Type', 'Authorization'],
     methods: "GET,HEAD,PUT,POST,DELETE",
     preflightContinue: false,
     optionsSuccessStatus: 204
