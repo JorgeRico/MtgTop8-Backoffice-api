@@ -35,9 +35,9 @@ export const createApp = ({ leagueModel, tournamentModel, playerModel, deckModel
      * If everything is ok, continues to the url
      * If it's not authenticated, sends authentication error
      */
-    app.use((req, res, next) => {
-        authenticateUser(req, res, next);
-    });
+    // app.use((req, res, next) => {
+    //     authenticateUser(req, res, next);
+    // });
 
     // use routers
     app.use('/leagues', createLeagueRouter({ leagueModel: leagueModel }));

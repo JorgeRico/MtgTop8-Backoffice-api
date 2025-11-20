@@ -10,22 +10,19 @@ const ACCEPTED_ORIGINS = [
 
 export const corsMiddleware = ( { acceptedOrigins = ACCEPTED_ORIGINS } = {}) => cors({
     origin: (origin, callback) => {
-        console.log(acceptedOrigins)
-        console.log(origin)
-        // if (!origin) {
-        //     return callback(null, true); 
-        // }
+        if (!origin) {
+            return callback(null, true); 
+        }
 
         if (acceptedOrigins.includes(origin)) {
             return callback(null, true);       
         }
-        return callback(null, true);
 
-        // return callback(new Error('Not allowed by CORS'));
+        return callback(new Error('Not allowed by CORS'));
     },
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
-    methods: "GET,HEAD,PUT,POST,DELETE",
+    methods: "GET, OPTIONS, PUT, POST, DELETE",
     preflightContinue: false,
     optionsSuccessStatus: 204
 });
