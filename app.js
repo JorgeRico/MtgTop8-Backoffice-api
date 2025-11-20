@@ -2,8 +2,7 @@ import dotenv from 'dotenv';
 import express, { json } from "express";
 import { corsMiddleware } from './middlewares/cors.js';
 import { authenticateUser } from './middlewares/firebase.js';
-import cors from 'cors';
-
+// import cors from 'cors';
 
 // load routers
 import { createDeckRouter } from './routes/decks.js';
@@ -18,10 +17,10 @@ export const createApp = ({ leagueModel, tournamentModel, playerModel, deckModel
     // express api
     const app  = express();
     // cors middleware
-    // app.use(corsMiddleware());
-    app.use(cors({
-        origin: '*'
-    }));    
+    app.use(corsMiddleware());
+    // app.use(cors({
+    //     origin: '*'
+    // }));    
     // disable x-powered-by header
     app.disable('x-powered-by');
     // for parsing application/json
