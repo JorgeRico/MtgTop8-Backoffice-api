@@ -9,21 +9,20 @@ const ACCEPTED_ORIGINS = [
 ];
 
 export const corsMiddleware = ( { acceptedOrigins = ACCEPTED_ORIGINS } = {}) => cors({
-    origin: 'https://mtg-top8-backoffice-front.vercel.app', 
-    // (origin, callback) => {
-    //     if (!origin) {
-    //         return callback(null, true); 
-    //     }
+    origin: (origin, callback) => {
+        if (!origin) {
+            return callback(null, true); 
+        }
 
-    //     if (acceptedOrigins.includes(origin)) {
-    //         return callback(null, true);       
-    //     }
+        if (acceptedOrigins.includes(origin)) {
+            return callback(null, true);       
+        }
 
-    //     return callback(new Error('Not allowed by CORS'));
-    // },
-    // credentials: true,
-    // allowedHeaders: [ 'Content-Type', 'Authorization' ],
-    // methods: "GET, OPTIONS, PUT, POST, DELETE",
-    // preflightContinue: false,
-    // optionsSuccessStatus: 204
+        return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+    allowedHeaders: [ 'Content-Type', 'Authorization' ],
+    methods: "GET, OPTIONS, PUT, POST, DELETE",
+    preflightContinue: false,
+    optionsSuccessStatus: 204
 });

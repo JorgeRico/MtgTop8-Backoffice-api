@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 import express, { json } from "express";
 import { corsMiddleware } from './middlewares/cors.js';
 import { authenticateUser } from './middlewares/firebase.js';
+import cors from 'cors';
+
 
 // load routers
 import { createDeckRouter } from './routes/decks.js';
@@ -16,7 +18,10 @@ export const createApp = ({ leagueModel, tournamentModel, playerModel, deckModel
     // express api
     const app  = express();
     // cors middleware
-    app.use(corsMiddleware());
+    // app.use(corsMiddleware());
+    app.use(cors({
+        origin: '*'
+    }));    
     // disable x-powered-by header
     app.disable('x-powered-by');
     // for parsing application/json
@@ -35,9 +40,9 @@ export const createApp = ({ leagueModel, tournamentModel, playerModel, deckModel
      * If everything is ok, continues to the url
      * If it's not authenticated, sends authentication error
      */
-    // app.use((req, res, next) => {
-    //     authenticateUser(req, res, next);
-    // });
+    app.use((req, res, next) => {
+        authenticateUser(req, res, next);
+    });
 
     // use routers
     app.use('/leagues', createLeagueRouter({ leagueModel: leagueModel }));

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "node server-supabase.js",
+    "start": "node --watch server-supabase.js",
     "dev": "node --watch server-supabase.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
