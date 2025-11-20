@@ -1,4 +1,4 @@
-import { cors } from 'cors';
+import cors from 'cors';
 
 const ACCEPTED_ORIGINS = [
   'https://mtg-top8-backoffice-front.vercel.app',
@@ -10,15 +10,18 @@ const ACCEPTED_ORIGINS = [
 
 export const corsMiddleware = ( { acceptedOrigins = ACCEPTED_ORIGINS } = {}) => cors({
     origin: (origin, callback) => {
-        if (!origin) {
-            return callback(null, true); 
-        }
+        console.log(acceptedOrigins)
+        console.log(origin)
+        // if (!origin) {
+        //     return callback(null, true); 
+        // }
 
         if (acceptedOrigins.includes(origin)) {
             return callback(null, true);       
         }
+        return callback(null, true);
 
-        return callback(new Error('Not allowed by CORS'));
+        // return callback(new Error('Not allowed by CORS'));
     },
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
