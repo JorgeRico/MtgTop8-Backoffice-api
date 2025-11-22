@@ -78,29 +78,12 @@ export class TournamentController {
             return res.status(400).json(ErrorController.getErrorMessage("Tournament invalid values", result.error));
         }
         
-        result.data.date = this.getDateConverted(result.data.date);
-
         const resultTournamentModel = await this.tournamentModel.createTournament({data: result.data});
         if (!resultTournamentModel || resultTournamentModel.data.length == 0) {
             return res.status(404).json(ErrorController.emptyError());
         }
 
         res.status(201).json(resultTournamentModel);
-    }
-
-    /**
-     * Date conversion
-     * Create Web date format (scrapped)
-     */
-    getDateConverted(value) {
-        let dateValue   = value.toLocaleDateString('es-ES')
-        let splitValues = dateValue.split('/');
-
-        let day         = splitValues[0];
-        let month       = splitValues[1]
-        let year        = splitValues[2].substr(splitValues[2].length - 2)
-
-        return day + '/' + month + '/' + year;
     }
 
     /**
@@ -120,8 +103,6 @@ export class TournamentController {
             return res.status(400).json(ErrorController.getErrorMessage("Tournament id is required or Tournament invalid values", result.error));
         }
     
-        resultTournament.data.date = this.getDateConverted(resultTournament.data.date);
-
         const resultTournamentModel = await this.tournamentModel.updateTournamentById({id: result.data, data: resultTournament.data});
         if (!resultTournamentModel || resultTournamentModel.data.length == 0) {
             return res.status(404).json(ErrorController.emptyError());

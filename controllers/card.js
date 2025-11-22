@@ -50,7 +50,6 @@ export class CardsController {
         }
         
         const resultCardModel = await this.cardModel.createCard({data: result.data});
-        console.log(resultCardModel)
         if (!resultCardModel) {
             return res.status(404).json(ErrorController.emptyError());
         }
