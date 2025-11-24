@@ -29,4 +29,19 @@ export class ErrorController {
             ]
         }
     }
+
+    static messageNoErrorsArray(message) {
+        return {
+            "message" : message, 
+            "errors"  : [
+                {
+                    "expected" : "",
+                    "code"     : "invalid_type",
+                    "received" : "NaN",
+                    "path"     : [],
+                    "message"  : "Invalid input: result not found"
+                }
+            ]
+        }
+    }
 }

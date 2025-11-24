@@ -83,6 +83,11 @@ export class PlayerController {
         if (resultPlayer.error) {
             return res.status(400).json(ErrorController.getErrorMessage("Player id is required or Player invalid values", result.error));
         }
+
+        const playerHasDeck = await this.playerModel.getPlayerDeck( { id: result.data })
+        if (playerHasDeck.data.length >= 1) {
+            return res.status(500).json(ErrorController.messageNoErrorsArray("Unable to add deck.  Player has decks already"));
+        }
     
         const resultPlayerModel = await this.playerModel.updatePlayerById({id: result.data, data: resultPlayer.data});
         if (!resultPlayerModel || resultPlayerModel.data.length == 0) {
