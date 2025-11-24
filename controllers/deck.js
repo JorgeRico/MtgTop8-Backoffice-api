@@ -63,6 +63,11 @@ export class DeckController {
         if (resultDeck.error) {
             return res.status(400).json(ErrorController.getErrorMessage("Deck id is required or League invalid values", result.error));
         }
+
+        const playerHasDeck = await this.deckModel.playerHasDeck({ id: result.data })
+        if (playerHasDeck.data.length >= 1) {
+            return res.status(500).json(ErrorController.messageNoErrorsArray("Unable to add deck.  Player has decks already"));
+        }
     
         const resultDeckModel = await this.deckModel.updateDeckById({id: result.data, data: resultDeck.data});
         if (!resultDeckModel || resultDeckModel.data.length == 0) {

@@ -16,6 +16,17 @@ export class DeckModel {
         }
     }
 
+    static async playerHasDeck({ id }) {
+        try {
+            const data = await connection.from('decks').select('idPlayer').eq('id', id);
+            
+            return data;
+        } catch (error) {
+            console.error('Error fetching Deck by ID:', error);
+            return null;
+        }
+    }
+
     /**
      * Logic to get a deck by ID from the database
      * @params id
