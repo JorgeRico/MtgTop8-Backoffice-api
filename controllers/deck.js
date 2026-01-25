@@ -70,9 +70,8 @@ export class DeckController {
             if (!resultDeckModel || resultDeckModel.data.length == 0) {
                 return res.status(404).json(ErrorController.emptyError());
             }
+            res.status(200).json(resultDeckModel);
         }
-
-        res.status(200).json(resultDeckModel);
     }
 
     /**
