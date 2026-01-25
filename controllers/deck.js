@@ -66,12 +66,10 @@ export class DeckController {
 
         const playerHasDeck = await this.deckModel.playerHasDeck({ id: result.data })
         if (playerHasDeck.data.length >= 1) {
-            return res.status(500).json(ErrorController.messageNoErrorsArray("Unable to add deck.  Player has decks already"));
-        }
-    
-        const resultDeckModel = await this.deckModel.updateDeckById({id: result.data, data: resultDeck.data});
-        if (!resultDeckModel || resultDeckModel.data.length == 0) {
-            return res.status(404).json(ErrorController.emptyError());
+            const resultDeckModel = await this.deckModel.updateDeckById({id: result.data, data: resultDeck.data});
+            if (!resultDeckModel || resultDeckModel.data.length == 0) {
+                return res.status(404).json(ErrorController.emptyError());
+            }
         }
 
         res.status(200).json(resultDeckModel);
