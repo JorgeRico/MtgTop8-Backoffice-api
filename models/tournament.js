@@ -1,3 +1,4 @@
+import { id } from 'zod/v4/locales';
 import { connection } from '../middlewares/db.js';
 export class TournamentModel {
     /**
@@ -95,11 +96,10 @@ export class TournamentModel {
             let result = null;
             
             if (!page && !limit) {
-                result = await connection.from('tournaments').select().order('id', { ascending: true })
+                result = await connection.from('tournaments').select('id, name, date, players, leagues(year)').order('leagues(year)', { ascending: false })
             } else {
-                result = await connection.from('tournaments').select().order('id', { ascending: true }).range(page, limit);
+                result = await connection.from('tournaments').select('id, name, date, players, leagues(year)').order('leagues(year)', { ascending: false }).range(page, limit);
             }
-            
             return result;
         } catch (error) {
             console.error('Error fetching tournaments:', error);
