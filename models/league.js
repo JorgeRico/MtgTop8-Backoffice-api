@@ -111,7 +111,7 @@ export class LeagueModel {
             }
 
             if (page >= 0 && limit > 1 &&  data.data.current === undefined && data.data.year === undefined) {
-                result = await connection.from('leagues').select().order('id', { ascending: true }).range(page, limit);
+                result = await connection.from('leagues').select().order('year', { ascending: true }).range(page, limit);
             }
 
             if (data && data.data.current && !data.data.year) {
