@@ -92,7 +92,8 @@ export class PlayerModel {
      */
     static async getAllPlayers({ page, limit }) {
         try {
-            const result = await connection.from('players').select().order('id', { ascending: false }).range(page, limit);
+            // needs a view - supabase actually does not support order by with more than 1 deep join
+            const result = await connection.from('group_players_by_league_year').select().range(page, limit);
 
             return result;
         } catch (error) {
