@@ -58,7 +58,7 @@ export class LeagueController {
      * @returns 
      */
     createLeague = async (req, res) =>{
-        const result = validateLeague(req.body);
+        const result = validateLeagueParcial(req.body);
         if (result.error) {
             return res.status(400).json(ErrorController.getErrorMessage("League invalid values", result.error));
         }
