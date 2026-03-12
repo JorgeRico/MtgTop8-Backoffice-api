@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const TournamentSchema = z.object({
+const TournamentType = z.object({
     name         : z.string().min(3, "Tournament name must be at least 3 characters long"),
     date         : z.string(),
     idLeague     : z.int().positive(0, "Select a valid league"),
@@ -9,5 +9,5 @@ const TournamentSchema = z.object({
 });
 
 export const validateTournament = (object) => {
-    return TournamentSchema.safeParse(object);
+    return TournamentType.safeParse(object);
 }
