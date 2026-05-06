@@ -88,6 +88,7 @@ export class TournamentModel {
     
     /**
      * Logic to get all tournaments from the database
+     * view needed to transform date to order by correctly
      * @params current, year, page, limit
      * @returns result
      */
@@ -96,10 +97,11 @@ export class TournamentModel {
             let result = null;
             
             if (!page && !limit) {
-                result = await connection.from('tournaments').select('id, name, date, players, leagues(year)').order('leagues(year)', { ascending: false })
+                result = await connection.from('tournaments_with_parsed_date').select('id, name, date, players, parsed_date').order('parsed_date', { ascending: false })
             } else {
-                result = await connection.from('tournaments').select('id, name, date, players, leagues(year)').order('leagues(year)', { ascending: false }).range(page, limit);
+                result = await connection.from('tournaments_with_parsed_date').select('id, name, date, players, parsed_date').order('parsed_date', { ascending: false }).range(page, limit);
             }
+
             return result;
         } catch (error) {
             console.error('Error fetching tournaments:', error);
