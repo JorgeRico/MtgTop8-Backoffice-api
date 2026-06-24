@@ -66,17 +66,15 @@ export class PlayerModel {
             const result = await connection.from('players').select().eq('id', id);
 
             if (!result.error) {
-                if (!cards.error) {
+                // delete deck
+                const data = await connection.from('players').delete().eq('id', id).select();
+                if (!data.error) {
+                    // delete cards deck
+                    const cards = await connection.from('cards').delete().eq('idDeck', result.data[0].idDeck).select(); 
                     // delete deck
-                    const data = await connection.from('players').delete().eq('id', id).select();
-                    if (!data.error) {
-                        // delete cards deck
-                        const cards = await connection.from('cards').delete().eq('idDeck', result.data[0].idDeck).select(); 
-                        // delete deck
-                        const deck  = await connection.from('decks').delete().eq('id', result.data[0].idDeck).select();
+                    const deck  = await connection.from('decks').delete().eq('id', result.data[0].idDeck).select();
 
-                        return data;
-                    }
+                    return data;
                 }
             }
         } catch (error) {
