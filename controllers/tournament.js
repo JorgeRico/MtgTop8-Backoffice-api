@@ -14,10 +14,27 @@ export class TournamentController {
      * @returns data 
      */
     getAllTournaments = async (req, res) => {
-        const page  = UtilsController.setPagination(req.query.page, req.query.limit);
-        const limit = UtilsController.setLimit(req.query.page, req.query.limit);        
+        const filterName          = req.query.name;
+        const filterYear          = req.query.year;
+        const page                = UtilsController.setPagination(req.query.page, req.query.limit);
+        const limit               = UtilsController.setLimit(req.query.page, req.query.limit);
+        let resultTournamentModel = null;
 
-        const resultTournamentModel = await this.tournamentModel.getAllTournaments({ page: parseInt(page), limit: parseInt(limit) });
+        // List
+        if (!filterName && ! filterYear) {
+            resultTournamentModel = await this.tournamentModel.getAllTournaments({ page: parseInt(page), limit: parseInt(limit) });
+        }
+
+        // filter name
+        if (filterName) {
+            resultTournamentModel = await this.tournamentModel.getAllTournamentsFilters({ param: 'name', value: filterName });
+        }
+
+        // filter year
+        if (filterYear) {
+            resultTournamentModel = await this.tournamentModel.getAllTournamentsFilters({ param: 'year', value: filterYear });
+        }
+        
         if (!resultTournamentModel || resultTournamentModel.error) {
             return res.status(404).json(ErrorController.emptyError());
         }

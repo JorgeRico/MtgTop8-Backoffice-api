@@ -110,6 +110,34 @@ export class TournamentModel {
     }
 
     /**
+     * Logic to get all tournaments from the database
+     * view needed to transform date to order by correctly
+     * @params current, year, page, limit
+     * @returns result
+     */
+    static async getAllTournamentsFilters({ param, value }) {
+        try {
+            let result = null;
+
+            if (param == 'name') {
+                result = await connection.from('tournaments_with_parsed_date').select('id, name, date, players, parsed_date').eq('name', value).order('parsed_date', { ascending: false })
+            }
+
+            if (param == 'year') {
+                const start = `${value}-01-01`;
+                const end   = `${value}-12-31`;
+
+                result = await connection.from('tournaments_with_parsed_date').select('id, name, date, players, parsed_date').gte('parsed_date', start).lt('parsed_date', end).order('parsed_date', { ascending: false })
+            }
+
+            return result;
+        } catch (error) {
+            console.error('Error fetching tournaments:', error);
+            return null;
+        }
+    }
+
+    /**
      * Logic to get players by tournament ID from the database
      * @params id
      * @returns data
