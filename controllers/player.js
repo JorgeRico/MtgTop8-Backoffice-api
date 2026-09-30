@@ -14,10 +14,27 @@ export class PlayerController {
      * @returns data 
      */
     getAllPlayers = async (req, res) => {
-        const page  = UtilsController.setPagination(req.query.page, req.query.limit);
-        const limit = UtilsController.setLimit(req.query.page, req.query.limit);   
+        const filterName      = req.query.name;
+        const filterYear      = req.query.year;
+        const page            = UtilsController.setPagination(req.query.page, req.query.limit);
+        const limit           = UtilsController.setLimit(req.query.page, req.query.limit);
+        let resultPlayerModel = null;
 
-        const resultPlayerModel = await this.playerModel.getAllPlayers({ page: parseInt(page), limit: parseInt(limit) });
+        // List
+        if (!filterName && ! filterYear) {
+            resultPlayerModel = await this.playerModel.getAllPlayers({ page: parseInt(page), limit: parseInt(limit) });
+        }
+
+        // filter name
+        if (filterName) {
+            resultPlayerModel = await this.playerModel.getAllPlayersFilters({ param: 'name', value: filterName });
+        }
+
+        // filter year
+        if (filterYear) {
+            resultPlayerModel = await this.playerModel.getAllPlayersFilters({ param: 'year', value: filterYear });
+        }
+
         if (!resultPlayerModel || resultPlayerModel.error) {
             return res.status(404).json(ErrorController.emptyError());
         }

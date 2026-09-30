@@ -101,6 +101,34 @@ export class PlayerModel {
     }
 
     /**
+     * Logic to get all tournaments from the database
+     * view needed to transform date to order by correctly
+     * @params current, year, page, limit
+     * @returns result
+     */
+    static async getAllPlayersFilters({ param, value }) {
+        try {
+            let result = null;
+
+            if (param == 'name') {
+                result = await connection.from('group_players_by_league_year').select().eq('name', value).order('parsed_date', { ascending: false })
+            }
+
+            if (param == 'year') {
+                const start = `${value}-01-01`;
+                const end   = `${value}-12-31`;
+
+                result = await connection.from('group_players_by_league_year').select().gte('parsed_date', start).lt('parsed_date', end).order('parsed_date', { ascending: false }).order('position', { ascending: true })
+            }
+
+            return result;
+        } catch (error) {
+            console.error('Error fetching tournaments:', error);
+            return null;
+        }
+    }
+
+    /**
      * Logic to get all player decks 
      * @params id
      * @returns 
