@@ -120,10 +120,32 @@ export class LeagueController {
             return res.status(400).json(ErrorController.getErrorMessage("Invalid params", data.error));
         }
 
-        const page  = UtilsController.setPagination(req.query.page, req.query.limit);
-        const limit = UtilsController.setLimit(req.query.page, req.query.limit);   
+        const filterName          = req.query.name;
+        const filterYear          = req.query.year;
+        const page                = UtilsController.setPagination(req.query.page, req.query.limit);
+        const limit               = UtilsController.setLimit(req.query.page, req.query.limit);
+        let resultLeagueModel = null;
 
-        const resultLeagueModel = await this.leagueModel.getAllLeagues({ data: data, page: parseInt(page), limit: parseInt(limit) });
+        // List
+        if (!filterName && ! filterYear) {
+            resultLeagueModel = await this.leagueModel.getAllLeagues({ data: data, page: parseInt(page), limit: parseInt(limit) });
+        }
+
+        // filter name
+        if (filterName) {
+            resultLeagueModel = await this.leagueModel.getAllLeaguesFilters({ param: 'name', value: filterName });
+        }
+
+        // filter year
+        if (filterYear) {
+            resultLeagueModel = await this.leagueModel.getAllLeaguesFilters({ param: 'year', value: filterYear });
+        }
+
+
+
+        
+        
+        // const resultLeagueModel = await this.leagueModel.getAllLeagues({ data: data, page: parseInt(page), limit: parseInt(limit) });
         if (!resultLeagueModel || resultLeagueModel.error) {
             return res.status(404).json(ErrorController.emptyError());
         }
