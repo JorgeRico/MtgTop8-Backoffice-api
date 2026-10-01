@@ -134,11 +134,11 @@ export class DeckModel {
             let result = null;
 
             if (param == 'name') {
-                result = await connection.from('group_decks_by_league_year').select().eq('name', value).order('id', { ascending: false })
+                result = await connection.from('group_decks_by_league_year').select().eq('name', value).order('parsed_date', { ascending: false })
             }
 
             if (param == 'player') {
-                result = await connection.from('group_decks_by_league_year').select().eq('player', value).order('id', { ascending: false })
+                result = await connection.from('group_decks_by_league_year').select().eq('player', value).order('parsed_date', { ascending: false })
             }
 
             return result;
