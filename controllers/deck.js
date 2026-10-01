@@ -116,10 +116,27 @@ export class DeckController {
      * @returns data
      */
     getAllDecks = async (req, res) => {
-        const page  = UtilsController.setPagination(req.query.page, req.query.limit);
-        const limit = UtilsController.setLimit(req.query.page, req.query.limit);   
+        const filterName    = req.query.name;
+        const filterPlayer  = req.query.player;
+        const page          = UtilsController.setPagination(req.query.page, req.query.limit);
+        const limit         = UtilsController.setLimit(req.query.page, req.query.limit);   
+        let resultDeckModel = null;
 
-        const resultDeckModel = await this.deckModel.getAllDecks({ page: parseInt(page), limit: parseInt(limit) });
+        // List
+        if (!filterName) {
+            resultDeckModel = await this.deckModel.getAllDecks({ page: parseInt(page), limit: parseInt(limit) });
+        }
+
+        // filter name
+        if (filterName) {
+            resultDeckModel = await this.deckModel.getAllDecksFilters({ param: 'name', value: filterName });
+        }
+
+        // filter player
+        if (filterPlayer) {
+            resultDeckModel = await this.deckModel.getAllDecksFilters({ param: 'player', value: filterPlayer });
+        }
+
         if (!resultDeckModel || resultDeckModel.error) {
             return res.status(404).json(ErrorController.emptyError());
         }
