@@ -76,11 +76,32 @@ export class CardModel {
      */
     static async getCards({ page, limit }) {
         try {
-            const data = await connection.from('cards').select().order('id', { ascending: false }).range(page, limit);
+            const data = await connection.from('cards').select('*, decks (name)').order('id', { ascending: false }).range(page, limit);
             
             return data;
         } catch (error) {
             console.error('Error fetching Cards Cards:', error);
+            return null;
+        }
+    }
+
+    /**
+     * Logic to get all tournaments from the database
+     * view needed to transform date to order by correctly
+     * @params current, year, page, limit
+     * @returns result
+     */
+    static async getAllCardsFilters({ param, value }) {
+        try {
+            let result = null;
+
+            if (param == 'idDeck') {
+                result = await connection.from('cards').select('*, decks (name)').eq('idDeck', value).order('id', { ascending: false })
+            }
+
+            return result;
+        } catch (error) {
+            console.error('Error fetching tournaments:', error);
             return null;
         }
     }

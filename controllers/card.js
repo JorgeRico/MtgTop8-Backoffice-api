@@ -75,10 +75,21 @@ export class CardsController {
      * @returns data
      */
     getCards = async (req, res) => {
-        const page  = UtilsController.setPagination(req.query.page, req.query.limit);
-        const limit = UtilsController.setLimit(req.query.page, req.query.limit);   
+        const filterDeck    = req.query.idDeck;
+        const page          = UtilsController.setPagination(req.query.page, req.query.limit);
+        const limit         = UtilsController.setLimit(req.query.page, req.query.limit);   
+        let resultCardModel = null;
 
-        const resultCardModel = await this.cardModel.getCards({ page: parseInt(page), limit: parseInt(limit) });
+        // List
+        if (!filterDeck) {
+            resultCardModel = await this.cardModel.getCards({ page: parseInt(page), limit: parseInt(limit) });
+        }
+
+        // filter deck
+        if (filterDeck) {
+            resultCardModel = await this.cardModel.getAllCardsFilters({ param: 'idDeck', value: filterDeck });
+        }
+
         if (!resultCardModel || resultCardModel.error) {
             return res.status(404).json(ErrorController.emptyError());
         }
